@@ -34,4 +34,5 @@ repositories {
 dependencies {
     compile 'com.facebook.react:react-native:+'
     compile 'io.jsonwebtoken:jjwt:0.9.0'
+    compile 'com.google.code.gson:gson:2.8.2'
 }

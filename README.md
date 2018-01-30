@@ -102,28 +102,57 @@ Coming soon.
 
 ## Usage
 
-- sign:
 ```js
 import jwt from 'react-native-pure-jwt'
+```
 
+- sign:
+```js
 jwt
   .sign({
     iss: 'luisfelipez@live.com',
-    exp: new Date().getTime() + 3600000, // only required argument, in milliseconds, absolute to 1970
+    exp: 3600, // only required argument, in seconds, relative to now
     additional: 'payload',
-  }, 'my-secret')
+  }, // body
+  'my-secret', // secret
+  {
+    alg: 'HS256' // required, only algorithm by now
+  })
   .then(console.log) // token as the only argument
   .catch(console.error) // possible errors
+```
+
+- verify/decode:
+```js
+jwt
+  .verify(
+    token, // the token
+    secret, // the secret
+    {
+      alg: 'HS256' // required, the options
+    }
+  )
+  .then(console.log) // already an object. read below, exp key note
+  .catch(console.error)
+
+/*
+  response:
+    {
+      iss: 'luisfelipez@live.com',
+      exp: absolute timestamp (beginning from 1970) IN MILLISECONDS,
+      additional: 'payload'
+    }
+*/
 ```
 
 ## What is missing by now (a.k.a.: TODO)
 
 ### Android:
 - proper error handling
-- decode method
-- verify method
-- native base64 secret encoding (currently using JS)
 - other algorithms beyond `HS256`
+- return headers and body from verification/decoding
+- return decoded exp in milliseconds instead of seconds from `Java` instead of `JS`
+- return `JSON` from callback instead of intercepting promise in `JS`
 
 ### iOS:
 - everything
@@ -153,4 +182,4 @@ android {
 
 -----
 
-Feel free to colaborate with the project! 
+Feel free to colaborate with the project!

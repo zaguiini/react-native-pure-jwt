@@ -8,21 +8,24 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.jsonwebtoken.*;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Iterator;
+import java.util.*;
 
 import android.util.Base64;
 
 
 public class RNJwtModule extends ReactContextBaseJavaModule {
-  private String[] supportedAlgorithms = {"HS256", "teste"};
+  public static Gson createDefaultGson() {
+    GsonBuilder builder = new GsonBuilder();
+    return builder.create();
+  }
+
+
+  private String[] supportedAlgorithms = {"HS256"};
 
   public RNJwtModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -33,15 +36,55 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     return "RNJwtAndroid";
   }
 
+  public String getAlg(HashMap<String, Object> options) {
+    String alg = "HS256";
+
+    if(options.containsKey("alg") && options.get("alg") != null) {
+      String tmpAlg = options.get("alg").toString();
+
+      if(Arrays.asList(this.supportedAlgorithms).contains(tmpAlg)) {
+        alg = tmpAlg;
+      }
+    }
+
+    return alg;
+  }
+
+  public String toBase64(String plainString) {
+    return Base64.encodeToString(plainString.getBytes(Charset.forName("UTF-8")), Base64.DEFAULT);
+  }
+
   // TODO: decode method
+  @ReactMethod
+  public void verify(String jwt, String secret, ReadableMap bruteOptions, Promise callback) {
+    HashMap<String, Object> options = bruteOptions.toHashMap();
+
+    String alg = this.getAlg(options);
+
+    JwtParser parser = Jwts.parser();
+
+    if(alg.equals("HS256")) {
+      parser.setSigningKey(this.toBase64(secret));
+    }
+
+    try {
+      Object body = parser.parse(jwt).getBody();
+      String parsed = this.createDefaultGson().toJson(body);
+
+      callback.resolve(parsed);
+    } catch(ExpiredJwtException e) {
+      callback.reject("-2", "The JWT is expired.");
+    }
+  }
+
   // TODO: verify method
   // TODO: error checking
   // Source: https://github.com/auth0/node-jsonwebtoken
 
   @ReactMethod
-  public void sign(ReadableMap bruteClaims, String secret, Promise callback) {
+  public void sign(ReadableMap bruteClaims, String secret, ReadableMap bruteOptions, Promise callback) {
     HashMap<String, Object> claims = bruteClaims.toHashMap();
-    String alg = "HS256";
+    HashMap<String, Object> options = bruteOptions.toHashMap();
 
     JwtBuilder constructedToken = Jwts.builder();
 
@@ -51,13 +94,7 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
       return;
     }
 
-    if(claims.containsKey("alg") && claims.get("alg") != null) {
-      String tmpAlg = claims.get("alg").toString();
-
-      if(Arrays.asList(this.supportedAlgorithms).contains(tmpAlg)) {
-        alg = tmpAlg;
-      }
-    }
+    String alg = this.getAlg(options);
 
     Iterator it = claims.entrySet().iterator();
 
@@ -71,14 +108,19 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
         continue;
       }
 
-      constructedToken.claim(key.toString(), value);
+      if(key.equals("exp")) {
+        long duration = (long) bruteClaims.getDouble("exp") * 1000;
+
+        constructedToken.setExpiration(new Date(System.currentTimeMillis() + duration));
+      } else {
+        constructedToken.claim(key.toString(), value);
+      }
+
       it.remove();
     }
 
-    String base64Secret = Base64.encodeToString(secret.getBytes(Charset.forName("UTF-8")), Base64.DEFAULT);
-
     // TODO: change algorithm based on `alg` variable
-    constructedToken = constructedToken.signWith(SignatureAlgorithm.HS256, base64Secret);
+    constructedToken = constructedToken.signWith(SignatureAlgorithm.HS256, this.toBase64(secret));
 
     String token = constructedToken.compact();
 
