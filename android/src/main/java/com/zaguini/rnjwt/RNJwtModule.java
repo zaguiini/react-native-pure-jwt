@@ -24,7 +24,6 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     return builder.create();
   }
 
-
   private String[] supportedAlgorithms = {"HS256"};
 
   public RNJwtModule(ReactApplicationContext reactContext) {
