@@ -1,6 +1,6 @@
 {
   "name": "react-native-pure-jwt",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "A React Native library that uses native modules to work with JWTs!",
   "homepage": "https://github.com/zaguini/react-native-pure-jwt",
   "repository": {
