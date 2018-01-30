@@ -50,7 +50,9 @@ Now you know (just about) all you need to know about JWTs. (Credits: [jwtk/jjwt]
 
 ## Installation
 
-Just `react-native link react-native-pure-jwt` into your root directory and you're good to go. If it doesn't work, bear with me:
+Just `react-native install react-native-pure-jwt` into your root directory and you're good to go. It will download the packages then link. If it doesn't work, bear with me:
+
+`yarn add react-native-pure-jwt` / `npm install react-native-pure-jwt --save`
 
 ### Android
 
