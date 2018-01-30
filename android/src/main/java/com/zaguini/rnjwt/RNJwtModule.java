@@ -46,7 +46,7 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     JwtBuilder constructedToken = Jwts.builder();
 
     if(!claims.containsKey("exp") || claims.get("exp") == null) {
-      callback.reject("you must pass the expiration Date (exp)");
+      callback.reject("-1", "you must pass the expiration Date (exp)");
 
       return;
     }
@@ -67,7 +67,7 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
       Object key = pair.getKey();
       Object value = pair.getValue();
 
-      if(new String("alg").equals(key)) {
+      if(key.equals("alg")) {
         continue;
       }
 
