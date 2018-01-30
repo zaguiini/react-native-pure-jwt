@@ -114,17 +114,40 @@ jwt
   .catch(console.error) // possible errors
 ```
 
-# What is missing by now (a.k.a.: TODO)
+## What is missing by now (a.k.a.: TODO)
 
-## Android:
+### Android:
 - proper error handling
 - decode method
 - verify method
 - native base64 secret encoding (currently using JS)
 - other algorithms beyond `HS256`
 
-## iOS:
+### iOS:
 - everything
+
+## Troubleshooting
+
+"I can't build. `everythingcom.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException: Duplicate files copied in APK META-INF/LICENSE`. Put this in your `android/app/build.gradle`:
+
+```diff
+...
+android {
+    ...
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+```
 
 -----
 
