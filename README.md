@@ -109,7 +109,7 @@ import jwt from 'react-native-pure-jwt'
 jwt
   .sign({
     iss: 'luisfelipez@live.com',
-    exp: new Date().getTime() + 3600000, // only required argument, in milliseconds
+    exp: new Date().getTime() + 3600000, // only required argument, in milliseconds, absolute to 1970
     additional: 'payload',
   }, 'my-secret')
   .then(console.log) // token as the only argument
