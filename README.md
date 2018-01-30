@@ -11,7 +11,7 @@ Don't know what a JSON Web Token is? Read on. Otherwise, jump on down to the [In
 JWT is a means of transmitting information between two parties in a compact, verifiable form.
 
 The bits of information encoded in the body of a JWT are called `claims`. The expanded form of the JWT is in a JSON format, so each `claim` is a key in the JSON object.
- 
+
 JWTs can be cryptographically signed (making it a [JWS](https://tools.ietf.org/html/rfc7515)) or encrypted (making it a [JWE](https://tools.ietf.org/html/rfc7516)).
 
 This adds a powerful layer of verifiability to the user of JWTs. The receiver has a high degree of confidence that the JWT has not been tampered with by verifying the signature, for instance.
@@ -23,7 +23,7 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2UifQ.ipevRNuRP6HflG8cFKnmUPtypruRC4fb1DWtoLL6
 ```
 
 Each section is [base 64](https://en.wikipedia.org/wiki/Base64) encoded. The first section is the header, which at a minimum needs to specify the algorithm used to sign the JWT. The second section is the body. This section has all the claims of this JWT encoded in it. The final section is the signature. It's computed by passing a combination of the header and body through the algorithm specified in the header.
- 
+
 If you pass the first two sections through a base 64 decoder, you'll get the following (formatting added for clarity):
 
 `header`
@@ -114,17 +114,40 @@ jwt
   .catch(console.error) // possible errors
 ```
 
-# What is missing by now (a.k.a.: TODO)
+## What is missing by now (a.k.a.: TODO)
 
-## Android:
+### Android:
 - proper error handling
 - decode method
 - verify method
 - native base64 secret encoding (currently using JS)
 - other algorithms beyond `HS256`
 
-## iOS:
+### iOS:
 - everything
+
+## Troubleshooting
+
+"I can't build. `everythingcom.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException: Duplicate files copied in APK META-INF/LICENSE`. Put this in your `android/app/build.gradle`:
+
+```diff
+...
+android {
+    ...
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+```
 
 -----
 
