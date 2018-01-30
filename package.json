@@ -2,8 +2,17 @@
   "name": "react-native-pure-jwt",
   "version": "1.0.0",
   "description": "A React Native library that uses native modules to work with JWTs!",
+  "homepage": "https://github.com/zaguini/react-native-pure-jwt",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/zaguini/react-native-pure-jwt.git"
+  },
+  "bugs": {
+    "url" : "https://github.com/zaguini/react-native-pure-jwt/issues",
+    "email" : "luisfelipezaguini@gmail.com"
+  },
   "main": "index.js",
-  "keywords": [],
-  "author": "Luis Felipe Zaguini <luisfelipezaguini@gmail.com>",
+  "keywords": ["react-native", "react", "java", "jwt", "token", "json", "web", "encryption", "security"],
+  "author": "Luis Felipe Zaguini <luisfelipezaguini@gmail.com> (https://github.com/zaguini)",
   "license": "MIT"
 }
