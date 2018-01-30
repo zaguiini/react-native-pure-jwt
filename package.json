@@ -24,8 +24,5 @@
     "security"
   ],
   "author": "Luis Felipe Zaguini <luisfelipezaguini@gmail.com> (https://github.com/zaguini)",
-  "license": "MIT",
-  "dependencies": {
-    "base-64": "^0.1.0"
-  }
+  "license": "MIT"
 }
