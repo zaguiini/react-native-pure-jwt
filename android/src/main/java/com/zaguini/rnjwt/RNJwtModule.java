@@ -1,9 +1,9 @@
 package com.zaguini.rnjwt;
 
-import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
+
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
+
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
@@ -11,13 +11,15 @@ import com.facebook.react.bridge.ReadableMap;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.CompressionCodecs;
 
-import java.util.Date;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Iterator;
+
+import android.util.Base64;
+
 
 public class RNJwtModule extends ReactContextBaseJavaModule {
   private String[] supportedAlgorithms = {"HS256", "teste"};
@@ -37,7 +39,7 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
   // Source: https://github.com/auth0/node-jsonwebtoken
 
   @ReactMethod
-  public void sign(ReadableMap bruteClaims, String base64Secret, Promise callback) {
+  public void sign(ReadableMap bruteClaims, String secret, Promise callback) {
     HashMap<String, Object> claims = bruteClaims.toHashMap();
     String alg = "HS256";
 
@@ -72,6 +74,8 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
       constructedToken.claim(key.toString(), value);
       it.remove();
     }
+
+    String base64Secret = Base64.encodeToString(secret.getBytes(Charset.forName("UTF-8")), Base64.DEFAULT);
 
     // TODO: change algorithm based on `alg` variable
     constructedToken = constructedToken.signWith(SignatureAlgorithm.HS256, base64Secret);
