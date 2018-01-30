@@ -130,7 +130,7 @@ jwt
 
 ## Troubleshooting
 
-"I can't build. `com.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException: Duplicate files copied in APK META-INF/LICENSE`. Put this in your `android/app/build.gradle`:
+"I can't build. `com.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException: Duplicate files copied in APK META-INF/LICENSE`". Put this in your `android/app/build.gradle`:
 
 ```diff
 ...
