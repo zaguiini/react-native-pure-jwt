@@ -19,4 +19,6 @@ RCT_EXTERN_METHOD(sign:
                rejecter:(RCTPromiseRejectBlock)reject
 )
 
+RCT_EXTERN_METHOD(top:)
+
 @end

@@ -11,15 +11,22 @@ import JWT
 
 @objc(RNJwtIos)
 class RNJwtIos: NSObject {
-
-    @objc(sign:payload:secret:options:resolve:reject:)
-    func sign(
+//
+//    (sign:payload:secret:options:resolve:reject:)
+    @objc func sign(
         payload: NSDictionary,
         secret: String,
         options: NSDictionary,
         resolver resolve: RCTPromiseResolveBlock,
         rejecter reject: RCTPromiseRejectBlock
     ) -> Void {
+        print(JWT)
+        print("SOLTA SA PORRA")
         resolve(true)
+    }
+    
+    @obj(top:)
+    func top() -> Void {
+        print("ta porra")
     }
 }

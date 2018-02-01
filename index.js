@@ -6,9 +6,13 @@ const platform = Platform
   .map((c, i) => i === 0 ? c.toUpperCase() : c)
   .join('')
 
+console.log(NativeModules)
+
 const jwt = NativeModules[`RNJwt${platform}`]
 
-export default {
-  ...jwt,
-  // decode: (signed, options = {}) => jwt.decode(signed, options)
-}
+export default jwt
+
+// export default {
+//   ...jwt,
+//   // decode: (signed, options = {}) => jwt.decode(signed, options)
+// }
