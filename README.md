@@ -4,6 +4,8 @@ A React Native library that uses native modules to work with JWTs!
 `react-native-pure-jwt` is a library that implements the power of JWTs inside React Native!
 It's goal is to sign, verify and decode `JSON web tokens` in order to provide a secure way to transmit authentic messages between two parties.
 
+***Currently, only the `HS256` algorithm is supported!***
+
 ## What's a JSON Web Token?
 
 Don't know what a JSON Web Token is? Read on. Otherwise, jump on down to the [Installation](#installation) section.
@@ -111,7 +113,7 @@ import jwt from 'react-native-pure-jwt'
 jwt
   .sign({
     iss: 'luisfelipez@live.com',
-    exp: 3600, // only required argument, in seconds, relative to execution time
+    exp: new Date().getTime() + (3600 * 1000), // expiration date, required, in ms, absolute to 1/1/1970
     additional: 'payload',
   }, // body
   'my-secret', // secret
@@ -181,8 +183,6 @@ Without `complete`:
 
 ### Android:
 - other algorithms beyond `HS256`
-- fix claims
-- absolute timestamp in milliseconds at the exp argument of the sign method (maybe not? would it be better?)
 
 ### iOS:
 - everything

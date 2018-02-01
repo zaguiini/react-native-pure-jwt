@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import android.util.Base64;
 import io.jsonwebtoken.impl.DefaultClaims;
 
-
 public class RNJwtModule extends ReactContextBaseJavaModule {
   private String[] supportedAlgorithms = {"HS256"};
 
@@ -28,7 +27,8 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     return "RNJwtAndroid";
   }
 
-  public String getAlg(HashMap<String, Object> options) {
+  private String getAlg(HashMap<String, Object> options) {
+    Boolean found = false;
     String alg = "HS256";
 
     if(options.containsKey("alg") && options.get("alg") != null) {
@@ -36,17 +36,22 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
 
       if(Arrays.asList(this.supportedAlgorithms).contains(tmpAlg)) {
         alg = tmpAlg;
+        found = true;
       }
+    }
+
+    if(!found) {
+      throw new java.lang.Error("invalid algorithm");
     }
 
     return alg;
   }
 
-  public String toBase64(String plainString) {
+  private String toBase64(String plainString) {
     return Base64.encodeToString(plainString.getBytes(Charset.forName("UTF-8")), Base64.DEFAULT);
   }
 
-  public String base64toString(String plainString) {
+  private String base64toString(String plainString) {
     return new String(Base64.decode(plainString, Base64.DEFAULT));
   }
 
@@ -129,8 +134,15 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void verify(String jwt, String secret, ReadableMap bruteOptions, Promise callback) {
     HashMap<String, Object> options = bruteOptions.toHashMap();
+    String alg;
 
-    String alg = this.getAlg(options);
+    try {
+      alg = this.getAlg(options);
+    } catch(Exception e) {
+      callback.reject("5", "Invalid algorithm");
+
+      return;
+    }
 
     JwtParser parser = Jwts.parser();
 
@@ -148,6 +160,10 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
       return;
     } catch(ExpiredJwtException e) {
       callback.reject("3", "The JWT is expired.");
+
+      return;
+    } catch(SignatureException e) {
+      callback.reject("6", "Invalid signature.");
 
       return;
     } catch(Exception e) {
@@ -170,9 +186,6 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     callback.resolve(response);
   }
 
-  // TODO: verify method
-  // Source: https://github.com/auth0/node-jsonwebtoken
-
   @ReactMethod
   public void sign(ReadableMap bruteClaims, String secret, ReadableMap bruteOptions, Promise callback) {
     HashMap<String, Object> claims = bruteClaims.toHashMap();
@@ -186,7 +199,15 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
       return;
     }
 
-    String alg = this.getAlg(options);
+    String alg;
+
+    try {
+        alg = this.getAlg(options);
+    } catch(Error e) {
+        callback.reject("5", "Invalid algorithm");
+
+        return;
+    }
 
     Iterator it = claims.entrySet().iterator();
 
@@ -196,25 +217,48 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
       Object key = pair.getKey();
       Object value = pair.getValue();
 
-      if(key.equals("alg")) {
-        continue;
-      }
+      switch(key.toString()) {
+        case "alg":
+        case "typ":
+          break;
 
-      if(key.equals("exp")) {
-        long duration = (long) bruteClaims.getDouble("exp") * 1000;
+        case "exp":
+          constructedToken.setExpiration(new Date((long) bruteClaims.getDouble("exp")));
+          break;
 
-        constructedToken.setExpiration(new Date(System.currentTimeMillis() + duration));
-      } else if(key.equals("aud")) {
-        constructedToken.setAudience(value.toString());
-      } else {
-        constructedToken.claim(key.toString(), value);
+        case "iat":
+          constructedToken.setIssuedAt(new Date((long) bruteClaims.getDouble("iat")));
+          break;
+
+        case "nbf":
+          constructedToken.setNotBefore(new Date((long) bruteClaims.getDouble("nbf")));
+          break;
+
+        case "aud":
+          constructedToken.setAudience(value.toString());
+          break;
+
+        case "iss":
+          constructedToken.setIssuer(value.toString());
+          break;
+
+        case "sub":
+          constructedToken.setSubject(value.toString());
+          break;
+
+        case "jti":
+          constructedToken.setId(value.toString());
+          break;
+
+        default:
+          constructedToken.claim(key.toString(), value);
       }
 
       it.remove();
     }
 
-    // TODO: change algorithm based on `alg` variable
-    constructedToken = constructedToken.signWith(SignatureAlgorithm.HS256, this.toBase64(secret));
+    constructedToken.setHeaderParam("typ", "JWT");
+    constructedToken = constructedToken.signWith(SignatureAlgorithm.forName(alg), this.toBase64(secret));
 
     String token = constructedToken.compact();
 
