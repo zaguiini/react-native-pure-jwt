@@ -7,17 +7,19 @@
 //
 
 import Foundation
+import JWT
 
 @objc(RNJwtIos)
 class RNJwtIos: NSObject {
-    
-    @objc(addEvent:location:date:)
-    func addEvent(name: String, location: String, date: NSNumber) -> Void {
-        // Date is ready to use!
+
+    @objc(sign:payload:secret:options:resolve:reject:)
+    func sign(
+        payload: NSDictionary,
+        secret: String,
+        options: NSDictionary,
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) -> Void {
+        resolve(true)
     }
-    
-    func constantsToExport() -> [String: Any]! {
-        return ["someKey": "someValue"]
-    }
-    
 }

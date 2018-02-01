@@ -56,11 +56,11 @@ Now you know (just about) all you need to know about JWTs. (Credits: [jwtk/jjwt]
 
 ## Installation
 
+### Android
+
 Just `react-native install react-native-pure-jwt` into your root directory and you're good to go. It will download the packages then link. If it doesn't work, bear with me:
 
 `yarn add react-native-pure-jwt` / `npm install react-native-pure-jwt --save`
-
-### Android
 
 - in `android/app/build.gradle`:
 
@@ -103,8 +103,30 @@ include ':app'
 
 ### iOS
 
-Coming soon.
+Install the library using `react-native install react-native-pure-jwt` and check if the output says that the library was linked. If not, run `react-native link react-native-pure-jwt` and it should be a success. Continue!
 
+You have to enable CocoaPods in order to run this.
+
+Yon call install CocoaPods from the tutorial here: [https://cocoapods.org/](https://cocoapods.org/).
+
+After installing, navigate over to your iOS project main folder on terminal (generally the `ios` folder in your project root directory), then type:
+
+`pod init`
+
+This will generate a file called `Podfile`. Open this file an include the following and just below the line `# Pods for (your project)`, insert:
+
+`pod 'react-native-pure-jwt', path: '../node_modules/react-native-pure-jwt'`
+
+Then save the file and close it. Run `pod install` inside the same folder and wait until it finishes.
+From now on, you must open the `(your project).xcworkspace` instead of `.xcodeproj`, so the libraries will be available to your project.
+
+#### Important
+
+If there are no Swift files in your project, open Xcode (the `.xcworkspace` file, remember!) and in **the root directory of your project** create a "dummy" Swift file and a bridging header. That is necessary in order to make Swift-based static libraries work. [Explanation at the bottom](https://facebook.github.io/react-native/docs/native-modules-ios.html).
+
+---
+
+Be *sure* you made everything. After that, clean your project then build. You should be good to go!
 
 ## Usage
 
@@ -201,7 +223,7 @@ Without `complete`:
 
 android {
     ...
-    
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'

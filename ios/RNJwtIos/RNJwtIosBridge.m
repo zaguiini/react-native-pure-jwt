@@ -11,6 +11,12 @@
 
 @interface RCT_EXTERN_MODULE(RNJwtIos, NSObject)
 
-RCT_EXTERN_METHOD(addEvent:(NSString *)name location:(NSString *)location date:(nonnull NSNumber *)date)
+RCT_EXTERN_METHOD(sign:
+                payload:(NSDictionary *)payload
+                 secret:(NSString *)secret
+                options:(NSDictionary *) options
+               resolver:(RCTPromiseResolveBlock)resolve
+               rejecter:(RCTPromiseRejectBlock)reject
+)
 
 @end
