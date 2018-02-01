@@ -4,6 +4,8 @@ A React Native library that uses native modules to work with JWTs!
 `react-native-pure-jwt` is a library that implements the power of JWTs inside React Native!
 It's goal is to sign, verify and decode `JSON web tokens` in order to provide a secure way to transmit authentic messages between two parties.
 
+The difference to another libraries is that `react-native-pure-jwt` relies on the native realm in order to do JWT-related operations intead of the Javascript realm, so it's more stable and performatic (and works!).
+
 ***Currently, only the `HS256` algorithm is supported!***
 
 React Native version required: >0.46.0
