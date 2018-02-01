@@ -6,6 +6,8 @@ It's goal is to sign, verify and decode `JSON web tokens` in order to provide a 
 
 ***Currently, only the `HS256` algorithm is supported!***
 
+React Native version required: >0.46.0
+
 ## What's a JSON Web Token?
 
 Don't know what a JSON Web Token is? Read on. Otherwise, jump on down to the [Installation](#installation) section.
