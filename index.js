@@ -1,22 +1,8 @@
 import { NativeModules } from 'react-native'
 
-const jwt = NativeModules.RNJwtAndroid
+let jwt = NativeModules.RNJwtAndroid
 
-const API = {
+export default {
   ...jwt,
-  verify: (token, secret, options) => new Promise((resolve, reject) => {
-    jwt
-      .verify(token, secret, options)
-      .then(res => {
-        res = JSON.parse(res)
-
-        resolve({
-          ...res,
-          exp: res.exp * 1000
-        })
-      })
-      .catch(reject)
-  })
+  decode: (signed, options={}) => jwt.decode(signed, options)
 }
-
-export default API

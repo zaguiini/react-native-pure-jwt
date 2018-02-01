@@ -1,30 +1,24 @@
 package com.zaguini.rnjwt;
 
-import com.facebook.react.bridge.ReactApplicationContext;
-
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-
-import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Promise;
-import com.facebook.react.bridge.ReadableMap;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import android.app.MediaRouteActionProvider;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import com.facebook.react.bridge.*;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.jsonwebtoken.*;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import android.util.Base64;
+import io.jsonwebtoken.impl.DefaultClaims;
 
 
 public class RNJwtModule extends ReactContextBaseJavaModule {
-  public static Gson createDefaultGson() {
-    GsonBuilder builder = new GsonBuilder();
-    return builder.create();
-  }
-
-
   private String[] supportedAlgorithms = {"HS256"};
 
   public RNJwtModule(ReactApplicationContext reactContext) {
@@ -54,7 +48,86 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     return Base64.encodeToString(plainString.getBytes(Charset.forName("UTF-8")), Base64.DEFAULT);
   }
 
-  // TODO: decode method
+  public String base64toString(String plainString) {
+    return new String(Base64.decode(plainString, Base64.DEFAULT));
+  }
+
+  @ReactMethod
+  public void decode(String jwt, Promise callback) {
+    ObjectMapper mapper = new ObjectMapper();
+    WritableMap response = Arguments.createMap();
+
+    String[] parts = jwt.split(Pattern.quote("."));
+
+    try {
+      Map<String, Object> payloadMap = mapper.readValue(
+              this.base64toString(parts[1]),
+              new TypeReference<Map<String, Object>>() {}
+      );
+
+      WritableMap payload = Arguments.makeNativeMap(payloadMap);
+      payload.putDouble("exp", payload.getDouble("exp") * 1000);
+
+      response.merge(payload);
+    } catch(IOException e) {
+      callback.reject("4", "invalid payload");
+
+      return;
+    }
+
+    callback.resolve(response);
+  }
+
+  @ReactMethod
+  public void decode(String jwt, ReadableMap bruteOptions, Promise callback) {
+    ObjectMapper mapper = new ObjectMapper();
+    WritableMap response = Arguments.createMap();
+
+    String[] parts = jwt.split(Pattern.quote("."));
+    List<String> errors = new ArrayList<>();
+
+    Boolean hasHeader = false;
+
+    if(bruteOptions != null && bruteOptions.hasKey("complete") && bruteOptions.getBoolean("complete")) {
+      hasHeader = true;
+
+      try {
+        Map<String, Object> headers = mapper.readValue(
+          this.base64toString(parts[0]),
+          new TypeReference<Map<String, Object>>() {}
+        );
+
+        response.putMap("headers", Arguments.makeNativeMap(headers));
+      } catch(IOException e) {
+        errors.add("invalid header");
+      }
+    }
+
+    try {
+      Map<String, Object> payloadMap = mapper.readValue(
+              this.base64toString(parts[1]),
+              new TypeReference<Map<String, Object>>() {}
+      );
+
+      WritableMap payload = Arguments.makeNativeMap(payloadMap);
+      payload.putDouble("exp", payload.getDouble("exp") * 1000);
+
+      if(hasHeader) {
+        response.putMap("payload", payload);
+      } else {
+        response.merge(payload);
+      }
+    } catch(IOException e) {
+      errors.add("invalid payload");
+    }
+
+    if(!errors.isEmpty()) {
+      callback.reject("4", TextUtils.join(", ", errors));
+    } else {
+      callback.resolve(response);
+    }
+  }
+
   @ReactMethod
   public void verify(String jwt, String secret, ReadableMap bruteOptions, Promise callback) {
     HashMap<String, Object> options = bruteOptions.toHashMap();
@@ -67,18 +140,39 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
       parser.setSigningKey(this.toBase64(secret));
     }
 
-    try {
-      Object body = parser.parse(jwt).getBody();
-      String parsed = this.createDefaultGson().toJson(body);
+    Jwt parsed;
 
-      callback.resolve(parsed);
+    try {
+      parsed = parser.parse(jwt);
+    } catch(MalformedJwtException e) {
+      callback.reject("2", "The JWT is invalid.");
+
+      return;
     } catch(ExpiredJwtException e) {
-      callback.reject("-2", "The JWT is expired.");
+      callback.reject("3", "The JWT is expired.");
+
+      return;
+    } catch(Exception e) {
+      callback.reject("0", e);
+
+      return;
     }
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    Map<String, Object> headersMap = mapper.convertValue(parsed.getHeader(), DefaultClaims.class);
+    Map<String, Object> body = mapper.convertValue(parsed.getBody(), DefaultClaims.class);
+
+    WritableMap headers = Arguments.makeNativeMap(headersMap);
+    WritableMap response = Arguments.makeNativeMap(body);
+
+    response.putDouble("exp", response.getDouble("exp") * 1000);
+    response.merge(headers);
+
+    callback.resolve(response);
   }
 
   // TODO: verify method
-  // TODO: error checking
   // Source: https://github.com/auth0/node-jsonwebtoken
 
   @ReactMethod
@@ -89,7 +183,7 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     JwtBuilder constructedToken = Jwts.builder();
 
     if(!claims.containsKey("exp") || claims.get("exp") == null) {
-      callback.reject("-1", "you must pass the expiration Date (exp)");
+      callback.reject("1", "you must pass the expiration Date (exp)");
 
       return;
     }
@@ -112,6 +206,8 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
         long duration = (long) bruteClaims.getDouble("exp") * 1000;
 
         constructedToken.setExpiration(new Date(System.currentTimeMillis() + duration));
+      } else if(key.equals("aud")) {
+        constructedToken.setAudience(value.toString());
       } else {
         constructedToken.claim(key.toString(), value);
       }

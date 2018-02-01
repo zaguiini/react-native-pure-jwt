@@ -111,7 +111,7 @@ import jwt from 'react-native-pure-jwt'
 jwt
   .sign({
     iss: 'luisfelipez@live.com',
-    exp: 3600, // only required argument, in seconds, relative to now
+    exp: 3600, // only required argument, in seconds, relative to execution time
     additional: 'payload',
   }, // body
   'my-secret', // secret
@@ -122,7 +122,7 @@ jwt
   .catch(console.error) // possible errors
 ```
 
-- verify/decode:
+- verify:
 ```js
 jwt
   .verify(
@@ -145,14 +145,44 @@ jwt
 */
 ```
 
+- decode (without signature validation):
+```js
+jwt
+  .decode(
+    token,
+    { complete: true } // optional, to get the headers
+  )
+```
+
+If `complete` object is passed as the second argument, the response will be an object with two keys (headers/payload). Else, you'll get just the payload (with no "payload" parent key). Example:
+
+`complete`:
+```js
+{
+  headers: {
+    alg: 'HS256'
+  },
+  payload: {
+    iss: 'luisfelipez@live.com',
+    exp: 'some date'
+  }
+}
+```
+
+Without `complete`:
+```js
+{
+  iss: 'luisfelipez@live.com',
+  exp: 'some date'
+}
+```
+
 ## What is missing by now (a.k.a.: TODO)
 
 ### Android:
-- proper error handling
 - other algorithms beyond `HS256`
-- return headers and body from verification/decoding
-- return decoded exp in milliseconds instead of seconds from `Java` instead of `JS`
-- return `JSON` from callback instead of intercepting promise in `JS`
+- fix claims
+- absolute timestamp in milliseconds at the exp argument of the sign method (maybe not? would it be better?)
 
 ### iOS:
 - everything
