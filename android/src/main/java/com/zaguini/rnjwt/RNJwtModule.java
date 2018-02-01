@@ -1,7 +1,5 @@
 package com.zaguini.rnjwt;
 
-import android.app.MediaRouteActionProvider;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import com.facebook.react.bridge.*;
 import com.fasterxml.jackson.core.type.TypeReference;
