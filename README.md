@@ -185,6 +185,7 @@ Without `complete`:
 
 ### Android:
 - other algorithms beyond `HS256`
+- improve error handling
 
 ### iOS:
 - everything
@@ -195,8 +196,10 @@ Without `complete`:
 
 ```diff
 ...
+
 android {
     ...
+    
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
