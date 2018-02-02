@@ -1,7 +1,7 @@
 import { Platform, NativeModules } from 'react-native'
 
-const jwt = NativeModules.RNJwtAndroid
-
+// const jwt = NativeModules.RNJwtAndroid
+const jwt = NativeModules.RNJwtIos
 // const platform = Platform
 //   .OS
 //   .split('')
