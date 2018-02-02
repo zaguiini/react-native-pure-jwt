@@ -103,26 +103,7 @@ include ':app'
 
 ### iOS
 
-Install the library using `react-native install react-native-pure-jwt` and check if the output says that the library was linked. If not, run `react-native link react-native-pure-jwt` and it should be a success. Continue!
-
-You have to enable CocoaPods in order to run this.
-
-Yon call install CocoaPods from the tutorial here: [https://cocoapods.org/](https://cocoapods.org/).
-
-After installing, navigate over to your iOS project main folder on terminal (generally the `ios` folder in your project root directory), then type:
-
-`pod init`
-
-This will generate a file called `Podfile`. Open this file an include the following and just below the line `# Pods for (your project)`, insert:
-
-`pod 'react-native-pure-jwt', path: '../node_modules/react-native-pure-jwt'`
-
-Then save the file and close it. Run `pod install` inside the same folder and wait until it finishes.
-From now on, you must open the `(your project).xcworkspace` instead of `.xcodeproj`, so the libraries will be available to your project.
-
-#### Important
-
-If there are no Swift files in your project, open Xcode (the `.xcworkspace` file, remember!) and in **the root directory of your project** create a "dummy" Swift file and a bridging header. That is necessary in order to make Swift-based static libraries work. [Explanation at the bottom](https://facebook.github.io/react-native/docs/native-modules-ios.html).
+Coming soon.
 
 ---
 
