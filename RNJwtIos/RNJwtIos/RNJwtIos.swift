@@ -9,15 +9,11 @@
 import Foundation
 import JWT
 
-class InvalidPayloadError: Error {
-  
-}
-
-class InvalidOptionsError: Error {
-  
-}
-
 class InvalidAlgorithmError: Error {
+  
+}
+
+class InvalidJWTError: Error {
   
 }
 
@@ -25,22 +21,72 @@ class InvalidAlgorithmError: Error {
 class RNJwtIos: NSObject {
   let bypassedClaims: [String] = ["iat", "aud", "nbf", "iss", "exp"]
   
-  func validate(type: String, value: NSDictionary) -> Bool {
-    if type == "payload" {
-      if value["exp"] == nil {
-        return false
-      }
+  func getAlg(alg: String, secret: String) -> Optional<Algorithm> {
+    switch(alg.uppercased()) {
+      case "HS256":
+        return Algorithm.hs256(secret.data(using: .utf8)!)
       
-      return true
-    } else if type == "options" {
-      if value["alg"] == nil {
-        return false
-      }
-      
-      return true
+      default:
+        return nil
     }
-    
-    return false
+  }
+  
+  @objc(decode:options:resolver:rejecter:)
+  func decode(
+    token: String,
+    options: NSDictionary,
+    resolver resolve: RCTPromiseResolveBlock,
+    rejecter reject: RCTPromiseRejectBlock
+  ) {
+    do {
+      let decoded: (headers: JOSEHeader, claims: ClaimSet) = try JWT.decodeWithHeaders(token, algorithms: [Algorithm.none], verify: false)
+      let complete = options["complete"] as! Bool
+      
+      if complete {
+        var headers = [
+          "typ": decoded.headers.type,
+          "alg": decoded.headers.algorithm,
+          ]
+        
+        if decoded.headers.contentType != nil {
+          headers["cty"] = decoded.headers.contentType
+        }
+        
+        if decoded.headers.keyID != nil {
+          headers["kid"] = decoded.headers.keyID
+        }
+        
+        resolve([
+          "headers": headers as Any,
+          "payload": decoded.claims.claims
+        ])
+      } else {
+        resolve(decoded.claims.claims)
+      }
+    } catch {
+      reject("InvalidJWTError", "Error: invalid JWT", InvalidJWTError())
+    }
+  }
+  
+  @objc(verify:secret:options:resolver:rejecter:)
+  func verify(
+    token: String,
+    secret: String,
+    options: NSDictionary,
+    resolver resolve: RCTPromiseResolveBlock,
+    rejecter reject: RCTPromiseRejectBlock
+  ) {
+    if let alg = getAlg(alg: options["alg"] as! String, secret: secret) {
+      do {
+        let claims: ClaimSet = try JWT.decode(token, algorithm: alg)
+        
+        resolve(claims.claims)
+      } catch {
+        reject("DecodeError", "Error decoding JWT", error)
+      }
+    } else {
+      reject("InvalidAlgorithmError", "Invalid algorithm.", InvalidAlgorithmError())
+    }
   }
   
   @objc(sign:secret:options:resolver:rejecter:)
@@ -51,52 +97,34 @@ class RNJwtIos: NSObject {
     resolver resolve: RCTPromiseResolveBlock,
     rejecter reject: RCTPromiseRejectBlock
   ) -> Void {
-    if !validate(type: "payload", value: payload) {
-      reject("H1", "H2", InvalidPayloadError())
-      return
-    }
-    
-    if !validate(type: "options", value: options) {
-      reject("Invalid options", "Invalid options", InvalidOptionsError())
-      return
-    }
-    
-    var alg: Algorithm
-    
-    switch((options["alg"] as! String).uppercased()) {
-      case "HS256":
-        alg = .hs256(secret.data(using: .utf8)!)
-        break
-      
-      default:
-        reject("Invalid algorithm", "Invalid algorithm. Valid: HS256", InvalidAlgorithmError())
-        return
-    }
-    
-    let encoded = encode(alg) { claims in
-      claims.issuedAt = payload["iat"] != nil ? Date(timeIntervalSince1970: (payload["iat"] as! Double) / 1000) : Date()
-      
-      claims.expiration = Date(timeIntervalSince1970: (payload["exp"] as! Double) / 1000)
-      
-      if let audience = payload["aud"] as? String {
-        claims.audience = audience
-      }
-      
-      if let issuer = payload["iss"] as? String {
-        claims.issuer = issuer
-      }
-      
-      if let notBefore = payload["nbf"] {
-        claims.notBefore = Date(timeIntervalSince1970: (notBefore as! Double) / 1000)
-      }
-      
-      for(key, value) in payload {
-        if(!bypassedClaims.contains(key as! String)) {
-          claims[key as! String] = value
+    if let alg = getAlg(alg: options["alg"] as! String, secret: secret) {
+      let encoded = encode(alg) { claims in
+        claims.issuedAt = payload["iat"] != nil ? Date(timeIntervalSince1970: (payload["iat"] as! Double) / 1000) : Date()
+        
+        claims.expiration = Date(timeIntervalSince1970: (payload["exp"] as! Double) / 1000)
+        
+        if let audience = payload["aud"] as? String {
+          claims.audience = audience
+        }
+        
+        if let issuer = payload["iss"] as? String {
+          claims.issuer = issuer
+        }
+        
+        if let notBefore = payload["nbf"] {
+          claims.notBefore = Date(timeIntervalSince1970: (notBefore as! Double) / 1000)
+        }
+        
+        for(key, value) in payload {
+          if(!bypassedClaims.contains(key as! String)) {
+            claims[key as! String] = value
+          }
         }
       }
+      
+      resolve(encoded)
+    } else {
+      reject("InvalidAlgorithmError", "Invalid algorithm.", InvalidAlgorithmError())
     }
-    
-    resolve(encoded)
   }
 }

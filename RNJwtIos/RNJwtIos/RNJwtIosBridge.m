@@ -14,12 +14,29 @@
 @interface RCT_EXTERN_MODULE(RNJwtIos, NSObject)
 
 RCT_EXTERN_METHOD(
-    sign:
-    (NSDictionary *) payload
-    secret: (NSString *) secret
-    options: (NSDictionary *) options
-    resolver: (RCTPromiseResolveBlock) resolve
-    rejecter: (RCTPromiseRejectBlock) reject
+                  sign:
+                  (NSDictionary *) payload
+                  secret: (NSString *) secret
+                  options: (NSDictionary *) options
+                  resolver: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject
+)
+
+RCT_EXTERN_METHOD(
+                  verify:
+                  (NSString *) token
+                  secret: (NSString *) secret
+                  options: (NSDictionary *) options
+                  resolver: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject
+)
+
+RCT_EXTERN_METHOD(
+                  decode:
+                  (NSString *) token
+                  options: (NSDictionary *) options
+                  resolver: (RCTPromiseResolveBlock) resolve
+                  rejecter: (RCTPromiseRejectBlock) reject
 )
 
 @end

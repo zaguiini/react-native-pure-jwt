@@ -159,11 +159,11 @@ jwt
 jwt
   .decode(
     token,
-    { complete: true } // optional, to get the headers
+    { complete: true } // get the headers
   )
 ```
 
-If `complete` object is passed as the second argument, the response will be an object with two keys (headers/payload). Else, you'll get just the payload (with no "payload" parent key). Example:
+If `complete` is `true`, the response will be an object with two keys (headers/payload). Else, you'll get just the payload (with no "payload" parent key). Example:
 
 `complete`:
 ```js
@@ -193,7 +193,9 @@ Without `complete`:
 - improve error handling
 
 ### iOS:
-- everything
+- other algorithms beyond `HS256`
+- improve error handling
+- better building method (the one above certainly doesn't look good. sorry about that!)
 
 ## Troubleshooting
 

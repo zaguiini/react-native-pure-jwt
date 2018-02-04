@@ -26,7 +26,7 @@ class RNJwt {
       secret: t.string.isRequired,
 
       options: t.shape({
-        alg: t.string.isRequired,
+        alg: t.oneOf(['hs256']).isRequired,
       }).isRequired,
     }, {
       payload,
@@ -34,7 +34,39 @@ class RNJwt {
       options,
     })
 
-    return this.module.sign(...arguments)
+    return this.module.sign(payload, secret, options)
+  }
+
+  verify(token, secret, options) {
+    this.validate({
+      token: t.string.isRequired,
+      secret: t.string.isRequired,
+
+      options: t.shape({
+        alg: t.oneOf(['hs256']).isRequired,
+      }).isRequired,
+    }, {
+      token,
+      secret,
+      options,
+    })
+
+    return this.module.verify(token, secret, options)
+  }
+
+  decode(token, options) {
+    this.validate({
+      token: t.string.isRequired,
+
+      options: t.shape({
+        complete: t.bool.isRequired,
+      }).isRequired,
+    }, {
+      token,
+      options,
+    })
+
+    return this.module.decode(token, options)
   }
 }
 
