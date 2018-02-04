@@ -24,5 +24,8 @@
     "security"
   ],
   "author": "Luis Felipe Zaguini <luisfelipezaguini@gmail.com> (https://github.com/zaguini)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "check-prop-types": "^1.1.2"
+  }
 }
