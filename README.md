@@ -56,9 +56,13 @@ Now you know (just about) all you need to know about JWTs. (Credits: [jwtk/jjwt]
 
 ## Installation
 
+Just `react-native install react-native-pure-jwt` into your root directory and you're good to go. It will download the packages then link.
+
+The Android version should work. **Please read below for iOS installation!**
+
 ### Android
 
-Just `react-native install react-native-pure-jwt` into your root directory and you're good to go. It will download the packages then link. If it doesn't work, bear with me:
+If it doesn't work, bear with me:
 
 `yarn add react-native-pure-jwt` / `npm install react-native-pure-jwt --save`
 
@@ -103,11 +107,17 @@ include ':app'
 
 ### iOS
 
-Coming soon.
+Beside linking, you should do some extra steps to compile it for iOS.
 
----
+Unfortunately I couldn't find a way to make via CocoaPods, so the installation it's kinda "manually".
 
-Be *sure* you made everything. After that, clean your project then build. You should be good to go!
+First, clone the following repo in any folder you want, preferentially inside your iOS project: [https://github.com/zaguini/JSONWebToken.swift](https://github.com/zaguini/JSONWebToken.swift)
+
+Open your project in Xcode. If you don't have an Objective C to Swift bridging header, simply create a File (File > New File > Swift File > Create bridging header). This step is **very important**.
+
+After that, right click `Libraries` in the Xcode project's tree view and add the `JWT.xcodeproj` that you've just downloaded. Now open your project's `Build phases`, go to `Link binary with libraries`, click at the `+` to add and then select `JWT.framework from JWT-iOS target in 'JWT' project`.
+
+**Double check** that you have both `RNJwtIos.xcodeproj` **AND** `JWT.xcodeproj` in your `Libraries` group inside Xcode. Finally, clean your project, then build. It should work!
 
 ## Usage
 
@@ -178,7 +188,7 @@ If `complete` is `true`, the response will be an object with two keys (headers/p
 }
 ```
 
-Without `complete`:
+With `complete` set to `false`:
 ```js
 {
   iss: 'luisfelipez@live.com',
@@ -188,13 +198,11 @@ Without `complete`:
 
 ## What is missing by now (a.k.a.: TODO)
 
-### Android:
 - other algorithms beyond `HS256`
 - improve error handling
 
 ### iOS:
-- other algorithms beyond `HS256`
-- improve error handling
+- return timestamps in milliseconds instead of seconds
 - better building method (the one above certainly doesn't look good. sorry about that!)
 
 ## Troubleshooting
