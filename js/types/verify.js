@@ -1,6 +1,6 @@
 import t from 'prop-types'
 
-export default {
+export const verifyType = {
   token: t.string.isRequired,
   secret: t.string.isRequired,
 

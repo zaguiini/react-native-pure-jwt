@@ -1,6 +1,6 @@
 import t from 'prop-types'
 
-export default {
+export const signType = {
   payload: t.shape({
     exp: t.number.isRequired,
     aud: t.string,

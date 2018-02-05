@@ -1,8 +1,6 @@
 import { NativeModules } from 'react-native'
 
-import signType from './types/sign'
-import verifyType from './types/verify'
-import decodeType from './types/decode'
+import { signType, verifyType, decodeType } from './types'
 import { assertPropTypes } from 'check-prop-types'
 
 class RNJwt {

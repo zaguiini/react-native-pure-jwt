@@ -1,6 +1,6 @@
 import t from 'prop-types'
 
-export default {
+export const decodeType = {
   token: t.string.isRequired,
 
   options: t.shape({
