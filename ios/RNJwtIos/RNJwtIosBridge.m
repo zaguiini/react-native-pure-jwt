@@ -20,7 +20,7 @@ RCT_EXTERN_METHOD(
                   options: (NSDictionary *) options
                   resolver: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject
-)
+                  )
 
 RCT_EXTERN_METHOD(
                   verify:
@@ -29,7 +29,7 @@ RCT_EXTERN_METHOD(
                   options: (NSDictionary *) options
                   resolver: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject
-)
+                  )
 
 RCT_EXTERN_METHOD(
                   decode:
@@ -37,6 +37,7 @@ RCT_EXTERN_METHOD(
                   options: (NSDictionary *) options
                   resolver: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject
-)
+                  )
 
 @end
+

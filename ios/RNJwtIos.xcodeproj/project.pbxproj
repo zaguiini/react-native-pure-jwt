@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5D3812222024961900B692B8 /* RNJwtIos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3812212024961900B692B8 /* RNJwtIos.swift */; };
-		5D3812242024964900B692B8 /* RNJwtIosBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D3812232024964900B692B8 /* RNJwtIosBridge.m */; };
+		5D4568872028798900653D6B /* RNJwtIosBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4568862028798900653D6B /* RNJwtIosBridge.m */; };
+		5D45688A202879A800653D6B /* RNJwtIos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D456889202879A800653D6B /* RNJwtIos.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		5D3812122024960400B692B8 /* CopyFiles */ = {
+		5D4568782028793500653D6B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -24,14 +24,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5D3812142024960400B692B8 /* libRNJwtIos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNJwtIos.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		5D3812202024961900B692B8 /* RNJwtIos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNJwtIos-Bridging-Header.h"; sourceTree = "<group>"; };
-		5D3812212024961900B692B8 /* RNJwtIos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNJwtIos.swift; sourceTree = "<group>"; };
-		5D3812232024964900B692B8 /* RNJwtIosBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNJwtIosBridge.m; sourceTree = "<group>"; };
+		5D45687A2028793500653D6B /* libRNJwtIos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNJwtIos.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D4568862028798900653D6B /* RNJwtIosBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNJwtIosBridge.m; sourceTree = "<group>"; };
+		5D456888202879A800653D6B /* RNJwtIos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNJwtIos-Bridging-Header.h"; sourceTree = "<group>"; };
+		5D456889202879A800653D6B /* RNJwtIos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNJwtIos.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		5D3812112024960400B692B8 /* Frameworks */ = {
+		5D4568772028793500653D6B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -41,28 +41,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5D38120B2024960400B692B8 = {
+		5D4568712028793500653D6B = {
 			isa = PBXGroup;
 			children = (
-				5D3812162024960400B692B8 /* RNJwtIos */,
-				5D3812152024960400B692B8 /* Products */,
+				5D45687C2028793500653D6B /* RNJwtIos */,
+				5D45687B2028793500653D6B /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		5D3812152024960400B692B8 /* Products */ = {
+		5D45687B2028793500653D6B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5D3812142024960400B692B8 /* libRNJwtIos.a */,
+				5D45687A2028793500653D6B /* libRNJwtIos.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5D3812162024960400B692B8 /* RNJwtIos */ = {
+		5D45687C2028793500653D6B /* RNJwtIos */ = {
 			isa = PBXGroup;
 			children = (
-				5D3812212024961900B692B8 /* RNJwtIos.swift */,
-				5D3812202024961900B692B8 /* RNJwtIos-Bridging-Header.h */,
-				5D3812232024964900B692B8 /* RNJwtIosBridge.m */,
+				5D4568862028798900653D6B /* RNJwtIosBridge.m */,
+				5D456889202879A800653D6B /* RNJwtIos.swift */,
+				5D456888202879A800653D6B /* RNJwtIos-Bridging-Header.h */,
 			);
 			path = RNJwtIos;
 			sourceTree = "<group>";
@@ -70,13 +70,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5D3812132024960400B692B8 /* RNJwtIos */ = {
+		5D4568792028793500653D6B /* RNJwtIos */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5D38121D2024960400B692B8 /* Build configuration list for PBXNativeTarget "RNJwtIos" */;
+			buildConfigurationList = 5D4568832028793500653D6B /* Build configuration list for PBXNativeTarget "RNJwtIos" */;
 			buildPhases = (
-				5D3812102024960400B692B8 /* Sources */,
-				5D3812112024960400B692B8 /* Frameworks */,
-				5D3812122024960400B692B8 /* CopyFiles */,
+				5D4568762028793500653D6B /* Sources */,
+				5D4568772028793500653D6B /* Frameworks */,
+				5D4568782028793500653D6B /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -84,56 +84,56 @@
 			);
 			name = RNJwtIos;
 			productName = RNJwtIos;
-			productReference = 5D3812142024960400B692B8 /* libRNJwtIos.a */;
+			productReference = 5D45687A2028793500653D6B /* libRNJwtIos.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		5D38120C2024960400B692B8 /* Project object */ = {
+		5D4568722028793500653D6B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Luis Felipe Zaguini";
 				TargetAttributes = {
-					5D3812132024960400B692B8 = {
+					5D4568792028793500653D6B = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 5D38120F2024960400B692B8 /* Build configuration list for PBXProject "RNJwtIos" */;
+			buildConfigurationList = 5D4568752028793500653D6B /* Build configuration list for PBXProject "RNJwtIos" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 5D38120B2024960400B692B8;
-			productRefGroup = 5D3812152024960400B692B8 /* Products */;
+			mainGroup = 5D4568712028793500653D6B;
+			productRefGroup = 5D45687B2028793500653D6B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5D3812132024960400B692B8 /* RNJwtIos */,
+				5D4568792028793500653D6B /* RNJwtIos */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		5D3812102024960400B692B8 /* Sources */ = {
+		5D4568762028793500653D6B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D3812242024964900B692B8 /* RNJwtIosBridge.m in Sources */,
-				5D3812222024961900B692B8 /* RNJwtIos.swift in Sources */,
+				5D4568872028798900653D6B /* RNJwtIosBridge.m in Sources */,
+				5D45688A202879A800653D6B /* RNJwtIos.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		5D38121B2024960400B692B8 /* Debug */ = {
+		5D4568812028793500653D6B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -188,7 +188,7 @@
 			};
 			name = Debug;
 		};
-		5D38121C2024960400B692B8 /* Release */ = {
+		5D4568822028793500653D6B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -237,7 +237,7 @@
 			};
 			name = Release;
 		};
-		5D38121E2024960400B692B8 /* Debug */ = {
+		5D4568842028793500653D6B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
@@ -253,7 +253,7 @@
 			};
 			name = Debug;
 		};
-		5D38121F2024960400B692B8 /* Release */ = {
+		5D4568852028793500653D6B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
@@ -271,25 +271,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5D38120F2024960400B692B8 /* Build configuration list for PBXProject "RNJwtIos" */ = {
+		5D4568752028793500653D6B /* Build configuration list for PBXProject "RNJwtIos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5D38121B2024960400B692B8 /* Debug */,
-				5D38121C2024960400B692B8 /* Release */,
+				5D4568812028793500653D6B /* Debug */,
+				5D4568822028793500653D6B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5D38121D2024960400B692B8 /* Build configuration list for PBXNativeTarget "RNJwtIos" */ = {
+		5D4568832028793500653D6B /* Build configuration list for PBXNativeTarget "RNJwtIos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5D38121E2024960400B692B8 /* Debug */,
-				5D38121F2024960400B692B8 /* Release */,
+				5D4568842028793500653D6B /* Debug */,
+				5D4568852028793500653D6B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 5D38120C2024960400B692B8 /* Project object */;
+	rootObject = 5D4568722028793500653D6B /* Project object */;
 }
