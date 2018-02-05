@@ -1,6 +1,8 @@
 import { NativeModules } from 'react-native'
 
-import t from 'prop-types'
+import signType from './types/sign'
+import verifyType from './types/verify'
+import decodeType from './types/decode'
 import { assertPropTypes } from 'check-prop-types'
 
 class RNJwt {
@@ -14,21 +16,7 @@ class RNJwt {
   }
 
   sign(payload, secret, options) {
-    this.validate({
-      payload: t.shape({
-        exp: t.number.isRequired,
-        aud: t.string,
-        iat: t.number,
-        nbf: t.number,
-        iss: t.string,
-      }).isRequired,
-
-      secret: t.string.isRequired,
-
-      options: t.shape({
-        alg: t.oneOf(['hs256']).isRequired,
-      }).isRequired,
-    }, {
+    this.validate(signType, {
       payload,
       secret,
       options,
@@ -38,14 +26,7 @@ class RNJwt {
   }
 
   verify(token, secret, options) {
-    this.validate({
-      token: t.string.isRequired,
-      secret: t.string.isRequired,
-
-      options: t.shape({
-        alg: t.oneOf(['hs256']).isRequired,
-      }).isRequired,
-    }, {
+    this.validate(verifyType, {
       token,
       secret,
       options,
@@ -55,13 +36,7 @@ class RNJwt {
   }
 
   decode(token, options) {
-    this.validate({
-      token: t.string.isRequired,
-
-      options: t.shape({
-        complete: t.bool.isRequired,
-      }).isRequired,
-    }, {
+    this.validate(decodeType, {
       token,
       options,
     })

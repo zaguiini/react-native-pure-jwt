@@ -4,11 +4,11 @@ A React Native library that uses native modules to work with JWTs!
 `react-native-pure-jwt` is a library that implements the power of JWTs inside React Native!
 It's goal is to sign, verify and decode `JSON web tokens` in order to provide a secure way to transmit authentic messages between two parties.
 
-The difference to another libraries is that `react-native-pure-jwt` relies on the native realm in order to do JWT-related operations intead of the Javascript realm, so it's more stable and performatic (and works!).
+The difference to another libraries is that `react-native-pure-jwt` relies on the native realm in order to do JWT-related operations instead of the Javascript realm, so it's more stable (and works without hacks!).
 
 ***Currently, only the `HS256` algorithm is supported!***
 
-React Native version required: >0.46.0
+React Native version required: `>= 0.46.0`
 
 ## What's a JSON Web Token?
 
@@ -17,10 +17,6 @@ Don't know what a JSON Web Token is? Read on. Otherwise, jump on down to the [In
 JWT is a means of transmitting information between two parties in a compact, verifiable form.
 
 The bits of information encoded in the body of a JWT are called `claims`. The expanded form of the JWT is in a JSON format, so each `claim` is a key in the JSON object.
-
-JWTs can be cryptographically signed (making it a [JWS](https://tools.ietf.org/html/rfc7515)) or encrypted (making it a [JWE](https://tools.ietf.org/html/rfc7516)).
-
-This adds a powerful layer of verifiability to the user of JWTs. The receiver has a high degree of confidence that the JWT has not been tampered with by verifying the signature, for instance.
 
 The compacted representation of a signed JWT is a string that has three parts, each separated by a `.`:
 
@@ -109,7 +105,7 @@ include ':app'
 
 Beside linking, you should do some extra steps to compile it for iOS.
 
-Unfortunately I couldn't find a way to make via CocoaPods, so the installation it's kinda "manually". If you have a solution, contact me via [e-mail](mailto:luisfelipez@live.com) or submit a pull request -- I'll be glad!
+Unfortunately I couldn't find a way to make via CocoaPods, so the installation is kinda "manually". If you have a solution, contact me via [e-mail](mailto:luisfelipez@live.com) or submit a pull request -- I'll be glad!
 
 First, clone the following repo in any folder you want, preferentially inside your iOS project: [https://github.com/zaguini/JSONWebToken.swift](https://github.com/zaguini/JSONWebToken.swift)
 
