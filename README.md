@@ -109,7 +109,7 @@ include ':app'
 
 Beside linking, you should do some extra steps to compile it for iOS.
 
-Unfortunately I couldn't find a way to make via CocoaPods, so the installation it's kinda "manually".
+Unfortunately I couldn't find a way to make via CocoaPods, so the installation it's kinda "manually". If you have a solution, contact me via [e-mail](mailto:luisfelipez@live.com) or submit a pull request -- I'll be glad!
 
 First, clone the following repo in any folder you want, preferentially inside your iOS project: [https://github.com/zaguini/JSONWebToken.swift](https://github.com/zaguini/JSONWebToken.swift)
 
