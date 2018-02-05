@@ -207,7 +207,9 @@ With `complete` set to `false`:
 
 ## Troubleshooting
 
-"I can't build. `com.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException: Duplicate files copied in APK META-INF/LICENSE`". Put this in your `android/app/build.gradle`:
+- "I can't build on Android! `com.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException: Duplicate files copied in APK META-INF/LICENSE`".
+
+Put this in your `android/app/build.gradle`:
 
 ```diff
 ...
@@ -229,6 +231,14 @@ android {
     }
 }
 ```
+
+- "iOS build fails. There is no module called `JWT`."
+
+Make *sure* you have linked properly, cleaned, closed/reopened XCode, cleaned again, relinked, and then clicked to build. If it still doesn't work, [open an issue](https://github.com/zaguini/react-native-pure-jwt/issues).
+
+- "On iOS my timestamps are all in seconds :("
+
+I know... Happens that the JWT library for iOS works that way! You can submit a pull request to [my forked repo](https://github.com/zaguini/JSONWebToken.swift) fixing that if you want to. Otherwise, just convert the timestamp to milliseconds inside your Javascript code.
 
 -----
 
