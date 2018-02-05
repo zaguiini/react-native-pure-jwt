@@ -103,17 +103,19 @@ include ':app'
 
 ### iOS
 
-Beside linking, you should do some extra steps to compile it for iOS.
+Besides linking, you should do some extra steps to compile it for iOS.
 
 Unfortunately I couldn't find a way to make via CocoaPods, so the installation is kinda "manually". If you have a solution, contact me via [e-mail](mailto:luisfelipez@live.com) or submit a pull request -- I'll be glad!
 
 First, clone the following repo in any folder you want, preferentially inside your iOS project: [https://github.com/zaguini/JSONWebToken.swift](https://github.com/zaguini/JSONWebToken.swift)
 
-Open your project in Xcode. If you don't have an Objective C to Swift bridging header, simply create a File (File > New File > Swift File > Create bridging header). This step is **very important**.
+Open your project in Xcode. If you don't have an Objective C to Swift bridging header, simply create a File (File > New File > Swift File, named it the way you want it, and after the creation, click on "Create bridging header"). This step is **very important**.
 
-After that, right click `Libraries` in the Xcode project's tree view and add the `JWT.xcodeproj` that you've just downloaded. Now open your project's `Build phases`, go to `Link binary with libraries`, click at the `+` to add and then select `JWT.framework from JWT-iOS target in 'JWT' project`.
+After that, right click `Libraries` in the Xcode project's tree view and add the `JWT.xcodeproj` that you've just downloaded. Now open your project's `Build phases`, go to `Link binary with libraries`, and add `JWT.framework from JWT-iOS target in 'JWT' project` to it.
 
-**Double check** that you have both `RNJwtIos.xcodeproj` **AND** `JWT.xcodeproj` in your `Libraries` group inside Xcode. Finally, clean your project, then build. It should work!
+**Double check** that you have both `RNJwtIos.xcodeproj` **AND** `JWT.xcodeproj` in your `Libraries` group inside Xcode project's tree view.
+
+Finally, clean your project then build. It should work!
 
 ## Usage
 
@@ -154,7 +156,7 @@ jwt
   response:
     {
       iss: 'luisfelipez@live.com',
-      exp: absolute timestamp (beginning from 1970) IN MILLISECONDS,
+      exp: absolute timestamp (beginning from 1970) IN MILLISECONDS on Android and IN SECONDS in iOS (see issues section below),
       additional: 'payload'
     }
 */
