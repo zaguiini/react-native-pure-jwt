@@ -32,7 +32,7 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     String alg = "HS256";
 
     if(options.containsKey("alg") && options.get("alg") != null) {
-      String tmpAlg = options.get("alg").toString();
+      String tmpAlg = options.get("alg").toString().toUpperCase();
 
       if(Arrays.asList(this.supportedAlgorithms).contains(tmpAlg)) {
         alg = tmpAlg;
