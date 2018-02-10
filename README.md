@@ -198,7 +198,6 @@ With `complete` set to `false`:
 - improve error handling
 
 ### iOS:
-- return timestamps in milliseconds instead of seconds
 - better building method (the one above certainly doesn't look good. sorry about that!)
 
 ## Troubleshooting
@@ -232,9 +231,6 @@ android {
 
 Make *sure* you have linked properly, cleaned, closed/reopened XCode, cleaned again, relinked, and then clicked to build. If it still doesn't work, [open an issue](https://github.com/zaguini/react-native-pure-jwt/issues).
 
-- "On iOS my timestamps are all in seconds :("
-
-I know... Happens that the JWT library for iOS works that way! You can submit a pull request to [my forked repo](https://github.com/zaguini/JSONWebToken.swift) fixing that if you want to. Otherwise, just convert the timestamp to milliseconds inside your Javascript code.
 
 -----
 

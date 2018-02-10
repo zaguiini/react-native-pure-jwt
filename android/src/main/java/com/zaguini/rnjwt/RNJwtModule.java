@@ -17,6 +17,7 @@ import io.jsonwebtoken.impl.DefaultClaims;
 
 public class RNJwtModule extends ReactContextBaseJavaModule {
   private String[] supportedAlgorithms = {"HS256"};
+  private String[] dateClaims = {"iat", "nbf", "exp"};
 
   public RNJwtModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -55,6 +56,16 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     return new String(Base64.decode(plainString, Base64.DEFAULT));
   }
 
+  private WritableMap getClaims(WritableMap claims) {
+    for(String s: this.dateClaims) {
+      if(claims.hasKey(s)) {
+        claims.putDouble(s, claims.getDouble(s) * 1000);
+      }
+    }
+
+    return claims;
+  }
+
   @ReactMethod
   public void decode(String jwt, Promise callback) {
     ObjectMapper mapper = new ObjectMapper();
@@ -68,8 +79,7 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
               new TypeReference<Map<String, Object>>() {}
       );
 
-      WritableMap payload = Arguments.makeNativeMap(payloadMap);
-      payload.putDouble("exp", payload.getDouble("exp") * 1000);
+      WritableMap payload = this.getClaims(Arguments.makeNativeMap(payloadMap));
 
       response.merge(payload);
     } catch(IOException e) {
@@ -112,8 +122,8 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
               new TypeReference<Map<String, Object>>() {}
       );
 
-      WritableMap payload = Arguments.makeNativeMap(payloadMap);
-      payload.putDouble("exp", payload.getDouble("exp") * 1000);
+      WritableMap payload = this.getClaims(Arguments.makeNativeMap(payloadMap));
+
 
       if(hasHeader) {
         response.putMap("payload", payload);
@@ -178,9 +188,8 @@ public class RNJwtModule extends ReactContextBaseJavaModule {
     Map<String, Object> body = mapper.convertValue(parsed.getBody(), DefaultClaims.class);
 
     WritableMap headers = Arguments.makeNativeMap(headersMap);
-    WritableMap response = Arguments.makeNativeMap(body);
+    WritableMap response = this.getClaims(Arguments.makeNativeMap(body));
 
-    response.putDouble("exp", response.getDouble("exp") * 1000);
     response.merge(headers);
 
     callback.resolve(response);
