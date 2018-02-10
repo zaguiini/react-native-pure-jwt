@@ -31,6 +31,22 @@ class RNJwtIos: NSObject {
         }
     }
     
+    func getClaims(bruteClaims: NSDictionary) -> NSDictionary {
+        var claims = bruteClaims
+        
+        for(claim) in bypassedClaims {
+            if claim == "aud" {
+                continue
+            }
+            
+            if let value = claims[claim] {
+                claims[claim] = Int((value as! Double) * 1000)
+            }
+        }
+        
+        return claims
+    }
+    
     @objc(decode:options:resolver:rejecter:)
     func decode(
         token: String,
@@ -40,7 +56,9 @@ class RNJwtIos: NSObject {
         ) {
         do {
             let decoded: (headers: JOSEHeader, claims: ClaimSet) = try JWT.decodeWithHeaders(token, algorithms: [Algorithm.none], verify: false)
+            
             let complete = options["complete"] as! Bool
+            let payload = getClaims(decoded.claims.claims)
             
             if complete {
                 var headers = [
@@ -58,10 +76,10 @@ class RNJwtIos: NSObject {
                 
                 resolve([
                     "headers": headers as Any,
-                    "payload": decoded.claims.claims
-                    ])
+                    "payload": payload
+                ])
             } else {
-                resolve(decoded.claims.claims)
+                resolve(payload)
             }
         } catch {
             reject("InvalidJWTError", "Error: invalid JWT", InvalidJWTError())
@@ -80,7 +98,7 @@ class RNJwtIos: NSObject {
             do {
                 let claims: ClaimSet = try JWT.decode(token, algorithm: alg)
                 
-                resolve(claims.claims)
+                resolve(getClaims(claims.claims))
             } catch {
                 reject("DecodeError", "Error decoding JWT", error)
             }
