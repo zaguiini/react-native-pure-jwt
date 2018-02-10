@@ -2,7 +2,7 @@
 //  RNJwtIosBridge.m
 //  RNJwtIos
 //
-//  Created by Luis Ferreira on 02/02/18.
+//  Created by Luis Ferreira Zaguini on 02/02/18.
 //  Copyright © 2018 Luis Felipe Zaguini. All rights reserved.
 //
 

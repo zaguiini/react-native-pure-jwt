@@ -1,9 +1,9 @@
 //
 //  RNJwtIos.swift
-//  agoravai
+//  RNJwtIos
 //
-//  Created by Luis Ferreira on 02/02/18.
-//  Copyright © 2018 Facebook. All rights reserved.
+//  Created by Luis Felipe Zaguini on 02/02/18.
+//  Copyright © 2018 Luis Felipe Zaguini. All rights reserved.
 //
 
 import Foundation
@@ -31,7 +31,7 @@ class RNJwtIos: NSObject {
         }
     }
     
-    func getClaims(bruteClaims: NSDictionary) -> NSDictionary {
+    func getClaims(_ bruteClaims: [String : Any]) -> [String: Any] {
         var claims = bruteClaims
         
         for(claim) in bypassedClaims {
@@ -64,7 +64,7 @@ class RNJwtIos: NSObject {
                 var headers = [
                     "typ": decoded.headers.type,
                     "alg": decoded.headers.algorithm,
-                    ]
+                ]
                 
                 if decoded.headers.contentType != nil {
                     headers["cty"] = decoded.headers.contentType
