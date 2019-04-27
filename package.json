@@ -1,0 +1,15 @@
+{
+  "name": "react-native-pure-jwt",
+  "version": "1.0.0",
+  "description": "React Native Pure JWT implementation",
+  "main": "js/index.js",
+  "author": "Luis Felipe Zaguini",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zaguiini/react-native-pure-jwt.git"
+  },
+  "peerDependencies": {
+    "react-native": "^0.41.2"
+  }
+}
