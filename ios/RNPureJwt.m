@@ -11,27 +11,30 @@
 RCT_EXPORT_MODULE()
 
 RCT_REMAP_METHOD(sign,
-                 claims:(NSDictionary *)payload
-                  secret: (NSString *) secret
-                  options: (NSDictionary *) options
-                  resolver: (RCTPromiseResolveBlock) resolve
-                  rejecter: (RCTPromiseRejectBlock) reject
-                 ) {
+                 claims:(NSDictionary *)claims
+                 secret: (NSString *) secret
+                 options: (NSDictionary *) options
+                 resolver: (RCTPromiseResolveBlock) resolve
+                 rejecter: (RCTPromiseRejectBlock) reject
+                ) {
+    
     JWTClaimsSet *claimsSet = [[JWTClaimsSet alloc] init];
+    // fill it
     claimsSet.issuer = @"Facebook";
     claimsSet.subject = @"Token";
-    claimsSet.audience = @"http://yourkarma.com";
-    claimsSet.expirationDate = [NSDate distantFuture];
-    claimsSet.notBeforeDate = [NSDate distantPast];
-    claimsSet.issuedAt = [NSDate date];
-    claimsSet.identifier = @"thisisunique";
-    claimsSet.type = @"test";
+    claimsSet.audience = @"https://jwt.io";
     
-    id<JWTAlgorithm> algorithm = [JWTAlgorithmFactory algorithmByName:@"HS256"];
+    // encode it
+    NSString *algorithmName = @"HS384";
+    NSDictionary *headers = @{@"custom":@"value"};
     
-    NSString *teste = [JWTBuilder encodeClaimsSet:claimsSet].secret(secret).algorithm(algorithm).encode;
+    id holder = [JWTAlgorithmHSFamilyDataHolder new].algorithmName(algorithmName).secret(secret);
     
-    resolve(teste);
+    JWTCodingResultType *result = [JWTEncodingBuilder encodeClaimsSet:claimsSet].headers(headers).addHolder(holder).result;
+
+    NSString *encodedToken = result.successResult.encoded;
+    
+    resolve(encodedToken);
 }
 
 @end
