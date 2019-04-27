@@ -17,20 +17,35 @@ RCT_REMAP_METHOD(sign,
                  resolver: (RCTPromiseResolveBlock) resolve
                  rejecter: (RCTPromiseRejectBlock) reject
                 ) {
-    
     JWTClaimsSet *claimsSet = [[JWTClaimsSet alloc] init];
-    // fill it
-    claimsSet.issuer = @"Facebook";
-    claimsSet.subject = @"Token";
-    claimsSet.audience = @"https://jwt.io";
     
+    for(id key in claims) {
+//        claimsSet.expirationDate; EXP
+//        claimsSet.issuedAt; IAT
+//        claimsSet.notBeforeDate; NBF
+        
+        if([key isEqualToString: @"aud"]) {
+            claimsSet.audience = [claims objectForKey:key];
+        } else if([key isEqualToString: @"jti"]) {
+            claimsSet.identifier = [claims objectForKey:key];
+        } else if([key isEqualToString: @"iss"]) {
+            claimsSet.issuer = [claims objectForKey:key];
+        } else if([key isEqualToString: @"sub"]) {
+            claimsSet.subject = [claims objectForKey:key];
+        } else if([key isEqualToString: @"typ"]) {
+            claimsSet.type = [claims objectForKey:key];
+        } else if([key isEqualToString: @"iat"]) { // DOING ISSUED AT
+            claimsSet.issuedAt = [NSDate dateWithTimeIntervalSince1970: 1000];
+        } else {
+            [claimsSet setValue: [claims objectForKey:key] forKey: key];
+        }
+    }
+
     // encode it
-    NSString *algorithmName = @"HS384";
-    NSDictionary *headers = @{@"custom":@"value"};
+    NSString *algorithmName = @"HS256";
     
     id holder = [JWTAlgorithmHSFamilyDataHolder new].algorithmName(algorithmName).secret(secret);
-    
-    JWTCodingResultType *result = [JWTEncodingBuilder encodeClaimsSet:claimsSet].headers(headers).addHolder(holder).result;
+    JWTCodingResultType *result = [JWTEncodingBuilder encodeClaimsSet:claimsSet].addHolder(holder).result;
 
     NSString *encodedToken = result.successResult.encoded;
     
