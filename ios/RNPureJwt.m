@@ -11,7 +11,7 @@
 RCT_EXPORT_MODULE()
 
 RCT_REMAP_METHOD(sign,
-                 claims:(NSDictionary *)claims
+                 claims: (NSDictionary *) claims
                  secret: (NSString *) secret
                  options: (NSDictionary *) options
                  resolver: (RCTPromiseResolveBlock) resolve
@@ -19,11 +19,9 @@ RCT_REMAP_METHOD(sign,
                 ) {
     JWTClaimsSet *claimsSet = [[JWTClaimsSet alloc] init];
     
+    NSMutableDictionary *payload = [[NSMutableDictionary alloc] init];
+    
     for(id key in claims) {
-//        claimsSet.expirationDate; EXP
-//        claimsSet.issuedAt; IAT
-//        claimsSet.notBeforeDate; NBF
-        
         if([key isEqualToString: @"aud"]) {
             claimsSet.audience = [claims objectForKey:key];
         } else if([key isEqualToString: @"jti"]) {
@@ -34,22 +32,103 @@ RCT_REMAP_METHOD(sign,
             claimsSet.subject = [claims objectForKey:key];
         } else if([key isEqualToString: @"typ"]) {
             claimsSet.type = [claims objectForKey:key];
-        } else if([key isEqualToString: @"iat"]) { // DOING ISSUED AT
-            claimsSet.issuedAt = [NSDate dateWithTimeIntervalSince1970: 1000];
+        } else if([key isEqualToString: @"iat"]) {
+            NSInteger issuedAt = [[claims objectForKey:key] integerValue];
+            claimsSet.issuedAt = [NSDate dateWithTimeIntervalSince1970: issuedAt];
+        } else if([key isEqualToString: @"nbf"]) {
+            NSInteger notBeforeDate = [[claims objectForKey:key] integerValue];
+            claimsSet.notBeforeDate = [NSDate dateWithTimeIntervalSince1970: notBeforeDate];
+        } else if([key isEqualToString: @"exp"]) {
+            NSInteger expirationDate = [[claims objectForKey:key] integerValue];
+            claimsSet.expirationDate = [NSDate dateWithTimeIntervalSince1970: expirationDate];
         } else {
-            [claimsSet setValue: [claims objectForKey:key] forKey: key];
+            [payload setObject: [claims objectForKey:key] forKey: key];
         }
     }
-
-    // encode it
+    
+    JWTEncodingBuilder *builder = [JWTEncodingBuilder encodePayload:payload];
+    
     NSString *algorithmName = @"HS256";
-    
     id holder = [JWTAlgorithmHSFamilyDataHolder new].algorithmName(algorithmName).secret(secret);
-    JWTCodingResultType *result = [JWTEncodingBuilder encodeClaimsSet:claimsSet].addHolder(holder).result;
-
-    NSString *encodedToken = result.successResult.encoded;
+    JWTCodingResultType *result = builder.claimsSet(claimsSet).addHolder(holder).result;
     
-    resolve(encodedToken);
+    if(result.successResult) {
+        resolve(result.successResult.encoded);
+    } else {
+        reject(@"failed", @"Encoding failed", result.errorResult.error);
+    }
+}
+
+RCT_REMAP_METHOD(decode,
+                 token: (NSString *) token
+                 secret: (NSString *) secret
+                 options: (NSDictionary *) options
+                 resolver: (RCTPromiseResolveBlock) resolve
+                 rejecter: (RCTPromiseRejectBlock) reject
+                 ) {
+    NSArray *claimsKeys = @[@"audience", @"identifier", @"issuer", @"subject", @"type", @"issuedAt", @"notBeforeDate", @"expirationDate"];
+
+    JWTClaimsSet *trustedClaims = [[JWTClaimsSet alloc] init];
+
+    if(!(bool) [[options objectForKey:@"skipValidation"] boolValue]) {
+        trustedClaims.expirationDate = [NSDate date];
+    }
+
+
+    NSString *algorithmName = @"HS256";
+    id holder = [JWTAlgorithmHSFamilyDataHolder new].algorithmName(algorithmName).secret(secret);
+
+    JWTCodingBuilder *verifyBuilder = [JWTDecodingBuilder decodeMessage:token].claimsSet(trustedClaims).addHolder(holder);
+    JWTCodingResultType *result = verifyBuilder.result;
+    
+    if (result.successResult) {
+        NSMutableDictionary *payload = [[NSMutableDictionary alloc] init];
+        [payload addEntriesFromDictionary: result.successResult.payload];
+
+        NSDictionary *claims = [result.successResult.claimsSet dictionaryWithValuesForKeys: claimsKeys];
+
+        for(id key in claims) {
+            if([key isEqualToString: @"audience"] && claims[key] != [NSNull null]) {
+                payload[@"aud"] = claims[key];
+            }
+
+            if([key isEqualToString: @"identifier"] && claims[key] != [NSNull null]) {
+                payload[@"jti"] = claims[key];
+            }
+
+            if([key isEqualToString: @"issuer"] && claims[key] != [NSNull null]) {
+                payload[@"iss"] = claims[key];
+            }
+
+            if([key isEqualToString: @"subject"] && claims[key] != [NSNull null]) {
+                payload[@"sub"] = claims[key];
+            }
+
+            if([key isEqualToString: @"expirationDate"] && [[NSDate dateWithTimeIntervalSince1970: 0] compare: claims[key]] != NSOrderedSame) {
+                double time = [[claims valueForKey:@"expirationDate"] timeIntervalSince1970];
+                [payload setValue:[NSNumber numberWithDouble: time] forKey:@"exp"];
+            }
+
+            if([key isEqualToString: @"issuedAt"] && [[NSDate dateWithTimeIntervalSince1970: 0] compare: claims[key]] != NSOrderedSame) {
+                double time = [[claims valueForKey:@"issuedAt"] timeIntervalSince1970];
+                [payload setValue:[NSNumber numberWithDouble: time] forKey:@"iat"];
+            }
+
+            if([key isEqualToString: @"notBeforeDate"] && [[NSDate dateWithTimeIntervalSince1970: 0] compare: claims[key]] != NSOrderedSame) {
+                double time = [[claims valueForKey:@"notBeforeDate"] timeIntervalSince1970];
+                [payload setValue:[NSNumber numberWithDouble: time] forKey:@"nbf"];
+            }
+        }
+
+
+        resolve(@{
+                  @"headers": result.successResult.headers,
+                  @"payload": payload,
+                  });
+    }
+    else {
+        reject(@"failed", @"Decoding failed", result.errorResult.error);
+    }
 }
 
 @end

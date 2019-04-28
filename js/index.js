@@ -1,6 +1,9 @@
+import { NativeModules } from 'react-native'
 
-import { NativeModules } from 'react-native';
+const { RNPureJwt } = NativeModules
 
-const { RNPureJwt } = NativeModules;
-
-export default RNPureJwt;
+export default {
+  ...RNPureJwt,
+  decode: (token, secret, options = {}) =>
+    RNPureJwt.decode(token, secret, options),
+}
