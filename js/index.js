@@ -1,46 +1,9 @@
 import { NativeModules } from 'react-native'
 
-import { signType, verifyType, decodeType } from './types'
-import { assertPropTypes } from 'check-prop-types'
+const { RNPureJwt } = NativeModules
 
-class RNJwt {
-  constructor(moduleName) {
-    this.moduleName = moduleName
-    this.module = NativeModules[moduleName]
-  }
-
-  validate(types, args) {
-    assertPropTypes(types, args, 'prop', this.moduleName)
-  }
-
-  sign(payload, secret, options) {
-    this.validate(signType, {
-      payload,
-      secret,
-      options,
-    })
-
-    return this.module.sign(payload, secret, options)
-  }
-
-  verify(token, secret, options) {
-    this.validate(verifyType, {
-      token,
-      secret,
-      options,
-    })
-
-    return this.module.verify(token, secret, options)
-  }
-
-  decode(token, options) {
-    this.validate(decodeType, {
-      token,
-      options,
-    })
-
-    return this.module.decode(token, options)
-  }
+export default {
+  ...RNPureJwt,
+  decode: (token, secret, options = {}) =>
+    RNPureJwt.decode(token, secret, options),
 }
-
-export default RNJwt

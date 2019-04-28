@@ -12,7 +12,7 @@ React Native version required: `>= 0.46.0`
 
 ## What's a JSON Web Token?
 
-Don't know what a JSON Web Token is? Read on. Otherwise, jump on down to the [Installation](#installation) section.
+Don't know what a JSON Web Token is? Read on. Otherwise, jump down to the [Installation](#installation) section.
 
 JWT is a means of transmitting information between two parties in a compact, verifiable form.
 
@@ -52,15 +52,15 @@ Now you know (just about) all you need to know about JWTs. (Credits: [jwtk/jjwt]
 
 ## Installation
 
-Just `react-native install react-native-pure-jwt` into your root directory and you're good to go. It will download the packages then link.
+Install the package with:
+`yarn add react-native-pure-jwt`
 
-The Android version should work. **Please read below for iOS installation!**
+And then run:
+`react-native link react-native-pure-jwt`
 
-### Android
+**The linking process on the iOS version works with Cocoapods**
 
-If it doesn't work, bear with me:
-
-`yarn add react-native-pure-jwt` / `npm install react-native-pure-jwt --save`
+### Manual Android linking
 
 - in `android/app/build.gradle`:
 
@@ -84,7 +84,7 @@ include ':app'
 - in `MainApplication.java`:
 
 ```diff
-+ import com.zaguini.rnjwt.RNJwtPackage;
++ import com.zaguiini.RNPureJwt.RNJwtPackage;
 
   public class MainApplication extends Application implements ReactApplication {
     //......
@@ -92,7 +92,7 @@ include ':app'
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-+         new RNJwtPackage(),
++         new RNPureJwtPackage(),
           new MainReactPackage()
       );
     }
@@ -101,19 +101,9 @@ include ':app'
   }
 ```
 
-### iOS
+### Manual iOS linking
 
-Beside linking, you should do some extra steps to compile it for iOS.
-
-Unfortunately I couldn't find a way to make via CocoaPods, so the installation is kinda "manually". If you have a solution, contact me via [e-mail](mailto:luisfelipez@live.com) or submit a pull request -- I'll be glad!
-
-First, clone the following repo in any folder you want, preferentially inside your iOS project: [https://github.com/zaguini/JSONWebToken.swift](https://github.com/zaguini/JSONWebToken.swift)
-
-Open your project in Xcode. If you don't have an Objective C to Swift bridging header, simply create a File (File > New File > Swift File > Create bridging header). This step is **very important**.
-
-After that, right click `Libraries` in the Xcode project's tree view and add the `JWT.xcodeproj` that you've just downloaded. Now open your project's `Build phases`, go to `Link binary with libraries`, click at the `+` to add and then select `JWT.framework from JWT-iOS target in 'JWT' project`.
-
-**Double check** that you have both `RNJwtIos.xcodeproj` **AND** `JWT.xcodeproj` in your `Libraries` group inside Xcode. Finally, clean your project, then build. It should work!
+You need to use Cocoapods at the moment.
 
 ## Usage
 
@@ -137,100 +127,36 @@ jwt
   .catch(console.error) // possible errors
 ```
 
-- verify:
+- decode:
 ```js
 jwt
-  .verify(
+  .decode(
     token, // the token
     secret, // the secret
     {
-      alg: 'HS256' // required, the options
+      skipValidation: true, // to skip signature and exp verification
     }
   )
   .then(console.log) // already an object. read below, exp key note
   .catch(console.error)
 
 /*
-  response:
+  response example:
     {
-      iss: 'luisfelipez@live.com',
-      exp: absolute timestamp (beginning from 1970) IN MILLISECONDS,
-      additional: 'payload'
+      headers: {
+        alg: 'HS256'
+      },
+      payload: {
+        iss: 'luisfelipez@live.com',
+        exp: 'some date', // IN SECONDS
+      }
     }
 */
 ```
 
-- decode (without signature validation):
-```js
-jwt
-  .decode(
-    token,
-    { complete: true } // get the headers
-  )
-```
-
-If `complete` is `true`, the response will be an object with two keys (headers/payload). Else, you'll get just the payload (with no "payload" parent key). Example:
-
-`complete`:
-```js
-{
-  headers: {
-    alg: 'HS256'
-  },
-  payload: {
-    iss: 'luisfelipez@live.com',
-    exp: 'some date'
-  }
-}
-```
-
-With `complete` set to `false`:
-```js
-{
-  iss: 'luisfelipez@live.com',
-  exp: 'some date'
-}
-```
-
-## What is missing by now (a.k.a.: TODO)
+## TODO
 
 - other algorithms beyond `HS256`
-- improve error handling
-
-### iOS:
-- better building method (the one above certainly doesn't look good. sorry about that!)
-
-## Troubleshooting
-
-- "I can't build on Android! `com.android.build.api.transform.TransformException: com.android.builder.packaging.DuplicateFileException: Duplicate files copied in APK META-INF/LICENSE`".
-
-Put this in your `android/app/build.gradle`:
-
-```diff
-...
-
-android {
-    ...
-
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES.txt'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/dependencies.txt'
-        exclude 'META-INF/LGPL2.1'
-    }
-}
-```
-
-- "iOS build fails. There is no module called `JWT`."
-
-Make *sure* you have linked properly, cleaned, closed/reopened XCode, cleaned again, relinked, and then clicked to build. If it still doesn't work, [open an issue](https://github.com/zaguini/react-native-pure-jwt/issues).
-
 
 -----
 
