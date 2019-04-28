@@ -84,7 +84,7 @@ include ':app'
 - in `MainApplication.java`:
 
 ```diff
-+ import com.zaguiini.RNPureJwt.RNJwtPackage;
++ import com.zaguiini.RNPureJwt.RNPureJwtPackage;
 
   public class MainApplication extends Application implements ReactApplication {
     //......
