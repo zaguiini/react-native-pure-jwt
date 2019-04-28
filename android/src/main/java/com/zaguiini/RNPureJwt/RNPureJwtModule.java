@@ -1,5 +1,4 @@
-
-package com.zaguini.RNPureJwt;
+package com.zaguiini.RNPureJwt;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
