@@ -33,13 +33,13 @@ RCT_REMAP_METHOD(sign,
         } else if([key isEqualToString: @"typ"]) {
             claimsSet.type = [claims objectForKey:key];
         } else if([key isEqualToString: @"iat"]) {
-            NSInteger issuedAt = [[claims objectForKey:key] integerValue];
+            NSInteger issuedAt = [[claims objectForKey:key] integerValue] / 1000;
             claimsSet.issuedAt = [NSDate dateWithTimeIntervalSince1970: issuedAt];
         } else if([key isEqualToString: @"nbf"]) {
-            NSInteger notBeforeDate = [[claims objectForKey:key] integerValue];
+            NSInteger notBeforeDate = [[claims objectForKey:key] integerValue] / 1000;
             claimsSet.notBeforeDate = [NSDate dateWithTimeIntervalSince1970: notBeforeDate];
         } else if([key isEqualToString: @"exp"]) {
-            NSInteger expirationDate = [[claims objectForKey:key] integerValue];
+            NSInteger expirationDate = [[claims objectForKey:key] integerValue] / 1000;
             claimsSet.expirationDate = [NSDate dateWithTimeIntervalSince1970: expirationDate];
         } else {
             [payload setObject: [claims objectForKey:key] forKey: key];
