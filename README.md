@@ -103,7 +103,13 @@ include ':app'
 
 ### Manual iOS linking
 
-You need to use Cocoapods at the moment.
+You need to use Cocoapods at the moment. Open your `Podfile` and insert the following line in your main target:
+
+```ruby
+pod 'RNPureJwt', :podspec => '../node_modules/react-native-pure-jwt/RNPureJwt.podspec'
+```
+
+Then run `pod install` and open your `.xcworkspace`
 
 ## Usage
 
