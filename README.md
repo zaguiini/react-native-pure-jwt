@@ -1,4 +1,5 @@
 # react-native-pure-jwt
+
 A React Native library that uses native modules to work with JWTs!
 
 `react-native-pure-jwt` is a library that implements the power of JWTs inside React Native!
@@ -6,8 +7,7 @@ It's goal is to sign, verify and decode `JSON web tokens` in order to provide a 
 
 The difference to another libraries is that `react-native-pure-jwt` relies on the native realm in order to do JWT-related operations instead of the Javascript realm, so it's more stable (and works without hacks!).
 
-***Currently, only the `HS256` algorithm is supported!***
-
+Supported algorithms: `HS256`, `HS384`, `HS512`, `RS256`, `RS384`, `RS512`, `ES256`, `ES384`, `ES512`, `PS256`, `PS384`, `PS512`
 React Native version required: `>= 0.46.0`
 
 ## What's a JSON Web Token?
@@ -29,6 +29,7 @@ Each section is [base 64](https://en.wikipedia.org/wiki/Base64) encoded. The fir
 If you pass the first two sections through a base 64 decoder, you'll get the following (formatting added for clarity):
 
 `header`
+
 ```
 {
   "alg": "HS256"
@@ -36,6 +37,7 @@ If you pass the first two sections through a base 64 decoder, you'll get the fol
 ```
 
 `body`
+
 ```
 {
   "sub": "Joe"
@@ -114,37 +116,41 @@ Then run `pod install` and open your `.xcworkspace`
 ## Usage
 
 ```js
-import jwt from 'react-native-pure-jwt'
+import jwt from "react-native-pure-jwt";
 ```
 
 - sign:
+
 ```js
 jwt
-  .sign({
-    iss: 'luisfelipez@live.com',
-    exp: new Date().getTime() + (3600 * 1000), // expiration date, required, in ms, absolute to 1/1/1970
-    additional: 'payload',
-  }, // body
-  'my-secret', // secret
-  {
-    alg: 'HS256' // required, only algorithm by now
-  })
+  .sign(
+    {
+      iss: "luisfelipez@live.com",
+      exp: new Date().getTime() + 3600 * 1000, // expiration date, required, in ms, absolute to 1/1/1970
+      additional: "payload"
+    }, // body
+    "my-secret", // secret
+    {
+      alg: "HS256"
+    }
+  )
   .then(console.log) // token as the only argument
-  .catch(console.error) // possible errors
+  .catch(console.error); // possible errors
 ```
 
 - decode:
+
 ```js
 jwt
   .decode(
     token, // the token
     secret, // the secret
     {
-      skipValidation: true, // to skip signature and exp verification
+      skipValidation: true // to skip signature and exp verification
     }
   )
   .then(console.log) // already an object. read below, exp key note
-  .catch(console.error)
+  .catch(console.error);
 
 /*
   response example:
@@ -160,10 +166,6 @@ jwt
 */
 ```
 
-## TODO
-
-- other algorithms beyond `HS256`
-
------
+---
 
 Feel free to colaborate with the project!
