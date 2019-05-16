@@ -7,7 +7,8 @@ It's goal is to sign, verify and decode `JSON web tokens` in order to provide a 
 
 The difference to another libraries is that `react-native-pure-jwt` relies on the native realm in order to do JWT-related operations instead of the Javascript realm, so it's more stable (and works without hacks!).
 
-Supported algorithms: `HS256`, `HS384`, `HS512`, `RS256`, `RS384`, `RS512`, `ES256`, `ES384`, `ES512`, `PS256`, `PS384`, `PS512`
+***Supported algorithms: `HS256`, `HS384`, `HS512`
+
 React Native version required: `>= 0.46.0`
 
 ## What's a JSON Web Token?
