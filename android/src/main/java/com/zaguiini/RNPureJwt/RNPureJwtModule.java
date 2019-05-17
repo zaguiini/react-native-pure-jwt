@@ -156,8 +156,10 @@ public class RNPureJwtModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void sign(ReadableMap claims, String secret, ReadableMap options, Promise callback) {
-        JwtBuilder constructedToken = Jwts.builder().setSubject("Joe")
-                .signWith(SignatureAlgorithm.HS256, this.toBase64(secret))
+        String algoritm = options.hasKey("alg") ? options.getString("alg") : "HS256";
+        JwtBuilder constructedToken = Jwts.builder()
+                .signWith(SignatureAlgorithm.forName(algoritm), this.toBase64(secret))
+                .setHeaderParam("alg", algoritm)
                 .setHeaderParam("typ", "JWT");
 
         Set<Map.Entry<String, Object>> entries = claims.toHashMap().entrySet();
@@ -172,7 +174,6 @@ public class RNPureJwtModule extends ReactContextBaseJavaModule {
 
             switch (key) {
                 case "alg":
-                case "typ":
                     break;
 
                 case "exp":
@@ -205,7 +206,7 @@ public class RNPureJwtModule extends ReactContextBaseJavaModule {
                 case "jti":
                     constructedToken.setId(value.toString());
                     break;
-
+                    
                 default:
                     constructedToken.claim(key, value);
             }

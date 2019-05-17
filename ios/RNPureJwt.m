@@ -48,7 +48,7 @@ RCT_REMAP_METHOD(sign,
     
     JWTEncodingBuilder *builder = [JWTEncodingBuilder encodePayload:payload];
     
-    NSString *algorithmName = @"HS256";
+    NSString *algorithmName = options[@"alg"] ? options[@"alg"] : @"HS256";
     id holder = [JWTAlgorithmHSFamilyDataHolder new].algorithmName(algorithmName).secret(secret);
     JWTCodingResultType *result = builder.claimsSet(claimsSet).addHolder(holder).result;
     
