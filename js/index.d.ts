@@ -4,7 +4,7 @@ export interface DecodeResponse {
 }
 
 export interface SignOptions {
-  alg: 'HS256'
+  alg: 'HS256' | 'HS384' | 'HS512'
 }
 
 export interface DecodeOptions {
