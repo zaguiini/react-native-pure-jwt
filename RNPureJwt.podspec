@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '10.0'
 
-  s.source       = { :git => package['repository']['url'], :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/zaguiini/react-native-pure-jwt.git", :tag => "#{s.version}" }
   s.source_files  = "ios/**/*.{h,m}"
 
   s.dependency 'React'
