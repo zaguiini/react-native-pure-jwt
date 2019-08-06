@@ -169,4 +169,23 @@ jwt
 
 ---
 
+## Troubleshooting
+
+### haste collision. react-native/package.json collides with Pods/React/package.json
+
+Add this to your `Podfile`:
+
+```rb
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == "React"
+      target.remove_from_project
+    end
+  end
+end
+```
+
+
+---
+
 Feel free to colaborate with the project!
