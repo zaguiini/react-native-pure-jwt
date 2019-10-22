@@ -7,8 +7,8 @@ assignees: ''
 
 ---
 
-**Have you read the README and looked at the source code to see if you're not doing it wrong?**
-Yes or no.
+**Have you read the README and looked at the source code to see if you're not doing anything wrong?**
+If you haven't, please don't open an issue. Try to fix your problem first with what we have!
 
 **Describe the bug**
 A clear and concise description of what the bug is.
