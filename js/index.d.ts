@@ -24,5 +24,5 @@ export interface RNPureJwt {
   ) => Promise<DecodeResponse>
 }
 
-const jwt: RNPureJwt;
+declare const jwt: RNPureJwt;
 export default jwt;
