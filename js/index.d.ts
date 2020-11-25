@@ -11,7 +11,7 @@ export interface DecodeOptions {
   skipValidation?: boolean
 }
 
-interface RNPureJwt {
+export interface RNPureJwt {
   sign: (
     payload: object,
     secret: string,
@@ -24,4 +24,5 @@ interface RNPureJwt {
   ) => Promise<DecodeResponse>
 }
 
-export default RNPureJwt
+declare const jwt: RNPureJwt;
+export default jwt;
