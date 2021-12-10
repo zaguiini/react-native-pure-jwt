@@ -119,25 +119,22 @@ Then run `pod install` and open your `.xcworkspace`
 
 ## Usage
 
-```js
-import jwt from "react-native-pure-jwt";
-```
-
 - sign:
 
 ```js
-jwt
-  .sign(
-    {
-      iss: "luisfelipez@live.com",
-      exp: new Date().getTime() + 3600 * 1000, // expiration date, required, in ms, absolute to 1/1/1970
-      additional: "payload"
-    }, // body
-    "my-secret", // secret
-    {
-      alg: "HS256"
-    }
-  )
+import { sign } from "react-native-pure-jwt";
+
+sign(
+  {
+    iss: "luisfelipez@live.com",
+    exp: new Date().getTime() + 3600 * 1000, // expiration date, required, in ms, absolute to 1/1/1970
+    additional: "payload"
+  }, // body
+  "my-secret", // secret
+  {
+    alg: "HS256"
+  }
+)
   .then(console.log) // token as the only argument
   .catch(console.error); // possible errors
 ```
@@ -145,28 +142,29 @@ jwt
 - decode:
 
 ```js
-jwt
-  .decode(
-    token, // the token
-    secret, // the secret
-    {
-      skipValidation: true // to skip signature and exp verification
-    }
-  )
+import { decode } from "react-native-pure-jwt";
+
+decode(
+  token, // the token
+  secret, // the secret
+  {
+    skipValidation: true // to skip signature and exp verification
+  }
+)
   .then(console.log) // already an object. read below, exp key note
   .catch(console.error);
 
 /*
   response example:
-    {
-      headers: {
-        alg: 'HS256'
-      },
-      payload: {
-        iss: 'luisfelipez@live.com',
-        exp: 'some date', // IN SECONDS
-      }
+  {
+    headers: {
+      alg: 'HS256'
+    },
+    payload: {
+      iss: 'luisfelipez@live.com',
+      exp: 'some date', // IN SECONDS
     }
+  }
 */
 ```
 

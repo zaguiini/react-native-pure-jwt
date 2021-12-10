@@ -11,18 +11,14 @@ export interface DecodeOptions {
   skipValidation?: boolean
 }
 
-export interface RNPureJwt {
-  sign: (
-    payload: object,
-    secret: string,
-    options: SignOptions
-  ) => Promise<string>
-  decode: (
-    token: string,
-    secret: string,
-    options: DecodeOptions
-  ) => Promise<DecodeResponse>
-}
+export function sign(
+  payload: object,
+  secret: string,
+  options: SignOptions
+): Promise<string>
 
-declare const jwt: RNPureJwt;
-export default jwt;
+export function decode(
+  token: string,
+  secret: string,
+  options?: DecodeOptions
+): Promise<DecodeResponse>
