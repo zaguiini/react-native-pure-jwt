@@ -69,16 +69,18 @@ RCT_REMAP_METHOD(decode,
     NSArray *claimsKeys = @[@"audience", @"identifier", @"issuer", @"subject", @"type", @"issuedAt", @"notBeforeDate", @"expirationDate"];
 
     JWTClaimsSet *trustedClaims = [[JWTClaimsSet alloc] init];
-
-    if(!(bool) [[options objectForKey:@"skipValidation"] boolValue]) {
+    BOOL decodeForced = [options[@"skipValidation"] boolValue] == YES;
+    
+    if(!decodeForced) {
         trustedClaims.expirationDate = [NSDate date];
     }
-
+    
+    NSNumber *decodeOptions = @(decodeForced);
 
     NSString *algorithmName = options[@"alg"] ? options[@"alg"] : @"HS256";
     id holder = [JWTAlgorithmHSFamilyDataHolder new].algorithmName(algorithmName).secret(secret);
 
-    JWTCodingBuilder *verifyBuilder = [JWTDecodingBuilder decodeMessage:token].claimsSet(trustedClaims).addHolder(holder);
+    JWTCodingBuilder *verifyBuilder = [JWTDecodingBuilder decodeMessage:token].claimsSet(trustedClaims).options(decodeOptions).addHolder(holder);
     JWTCodingResultType *result = verifyBuilder.result;
     
     if (result.successResult) {
