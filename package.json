@@ -1,6 +1,6 @@
 {
   "name": "react-native-pure-jwt",
-  "version": "2.2.4",
+  "version": "3.0.0",
   "description": "React Native Pure JWT implementation",
   "main": "js/index.js",
   "typings": "js/index.d.ts",
