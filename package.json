@@ -11,6 +11,6 @@
     "url": "https://github.com/zaguiini/react-native-pure-jwt.git"
   },
   "peerDependencies": {
-    "react-native": "^0.41.2"
+    "react-native": ">=0.41.2"
   }
 }
