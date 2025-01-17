@@ -96,62 +96,50 @@ public class RNPureJwtModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void decode(String token, String secret, ReadableMap options, Promise callback) {
-        JwtParser parser = Jwts.parser().setSigningKey(this.toBase64(secret));
-
         Boolean skipValidation = false;
 
+        // Parse options to check for skipValidation
         Set<Map.Entry<String, Object>> entries = options.toHashMap().entrySet();
-
-        for (Object entry: entries) {
+        for (Object entry : entries) {
             Map.Entry item = (Map.Entry) entry;
-
             String key = (String) item.getKey();
             Object value = item.getValue();
-
-            switch(key) {
-                case "skipValidation":
-                    skipValidation = (boolean) value;
-                    break;
+            if ("skipValidation".equals(key)) {
+                skipValidation = (boolean) value;
+                break;
             }
         }
 
-        Jwt parsed;
+        if (skipValidation) {
+            // Skip validation: manually decode the JWT parts
+            try {
+                getResponse(token, callback);
+            } catch (Exception e) {
+                callback.reject("7", "Failed to decode JWT: " + e.getMessage());
+            }
+            return;
+        }
+
+        // Normal validation using the JwtParser
+        if (secret == null || secret.isEmpty()) {
+            callback.reject("1", "Secret cannot be null or empty when validation is enabled.");
+            return;
+        }
+
+        JwtParser parser = Jwts.parser().setSigningKey(this.toBase64(secret));
 
         try {
-            parsed = parser.parse(token);
-        } catch(MalformedJwtException e) {
-            if(skipValidation) {
-                this.getResponse(token, callback);
-                return;
-            }
-
+            Jwt parsed = parser.parse(token);
+            getResponse(parsed, callback);
+        } catch (MalformedJwtException e) {
             callback.reject("2", "The JWT is invalid.");
-
-            return;
-        } catch(ExpiredJwtException e) {
-            if(skipValidation) {
-                this.getResponse(token, callback);
-                return;
-            }
-
+        } catch (ExpiredJwtException e) {
             callback.reject("3", "The JWT is expired.");
-            return;
-        } catch(SignatureException e) {
-            if(skipValidation) {
-                this.getResponse(token, callback);
-                return;
-            }
-
+        } catch (SignatureException e) {
             callback.reject("6", "Invalid signature.");
-
-            return;
-        } catch(Exception e) {
-            callback.reject("0", e);
-
-            return;
+        } catch (Exception e) {
+            callback.reject("0", e.getMessage());
         }
-
-        this.getResponse(parsed, callback);
     }
 
     @ReactMethod
