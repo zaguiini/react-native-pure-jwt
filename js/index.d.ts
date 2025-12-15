@@ -3,7 +3,11 @@ export interface DecodeResponse {
   payload: object
 }
 
-export interface SignOptions {
+interface CustomHeaders {
+  [key: string]: string | number | boolean
+}
+
+export interface SignOptions extends CustomHeaders {
   alg: 'HS256' | 'HS384' | 'HS512'
 }
 
